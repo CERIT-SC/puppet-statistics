@@ -1,4 +1,4 @@
-class statistics::node::server (
+class statistics::role::server (
   Hash $plugins = $::statistics::plugins,
 ) {
   
