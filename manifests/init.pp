@@ -4,6 +4,7 @@ class statistics (
   Array[String] $node_pacakges        = $::statistics::params::node_packages,
   String        $collectd_config_path = $::statistics::params::collectd_config_path,
   Boolean       $server               = $::statistics::params::server,
+  String        database              = $::statistics::params::database,
   Hash          $plugins              = $::statistics::params::plugins,
   Integer       $collectd_listen_port = $::statistics::params::collectd_port,
   Integer       $collectd_exp_port    = $::statistics::params::collectd_exp_port,

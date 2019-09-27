@@ -1,11 +1,17 @@
-class statistics::node::server (
-  Hash $plugins = $::statistics::plugins,
+class statistics::role::server (
+  Hash   $plugins  = $::statistics::plugins,
+  String $database = $::statistics::database,
 ) {
   
   package { $::statistics::server_packages :
     ensure => "present",
   }
   
+  package { 'database for grafana':
+   name   => $database.
+   ensure => "present",
+  }
+
   file { 'collectd_config':
     ensure  => 'present',
     path    => $::statistics::config_path,
@@ -27,7 +33,7 @@ class statistics::node::server (
     ensure  => 'running',
     require => [ File['collectd_config'] ,Package['collectd_exporter'] ],
   }
- 
+   
   # TODO NASTAVIT CONFIG DATABAZY AND GRAFANY
   # TODO RUN GRAFANA AND PROMETHEUS
 }

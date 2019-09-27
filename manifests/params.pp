@@ -7,9 +7,10 @@ class statistics::params  {
   $collectd_listen_port = 25826
   
   # SERVER STUFF
-  $server_packages   = ['grafana', 'collectd_exporter', 'prometheus']
+  $server_packages   = ['grafana', 'collectd_exporter']
   $server            = false
   $collectd_exp_port = 9110
+  $database          = "prometheus"
 
   #NODE STUFF
   $node_packages = ['collectd']
