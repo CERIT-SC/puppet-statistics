@@ -23,6 +23,14 @@ class statistics::role::server
     require => Package['collectd'],
   }
   
+
+  file { 'collectd_auth':
+    ensure  => 'present',
+    path    => '/etc/collectd.passwd'
+    content => "${::statistics::collectd_username}: ${statistics::collectd_password}",
+    require => Package['collectd'],  
+  }
+
   create_resources("statistics::plugin", $plugins)
 
   if $::statistics::database == "prometheus" {
@@ -56,7 +64,7 @@ class statistics::role::server
   service { 'collectd':
     enable  => true,
     ensure  => 'running',
-    require => [ File['collectd_config'], Package['collectd'] ],
+    require => [ File['collectd_auth'], File['collectd_config'], Package['collectd'] ],
   }
 
   service { $database:

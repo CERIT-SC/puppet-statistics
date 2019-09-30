@@ -10,6 +10,8 @@ class statistics (
   Hash                           $plugins              = $::statistics::params::plugins,
   Integer                        $collectd_listen_port = $::statistics::params::collectd_port,
   Integer                        $collectd_exp_port    = $::statistics::params::collectd_exp_port,
+  String                         $collectd_username    = $::statistics::params::collectd_username,
+  String                         $collectd_password    = $::statistics::params::collectd_password,
 ) inherits statistics::params {
 
   contain statistics::install

@@ -5,6 +5,8 @@ class statistics::params  {
   $plugins              = {}
   $path_to_plugins      = "/etc/collectd.d"
   $collectd_listen_port = 25826
+  $collectd_username    = lookup('statistics::collectd_username')
+  $collectd_password    = lookup('statistics::collectd_password')
   
   # SERVER STUFF
   $server_packages      = ['grafana']

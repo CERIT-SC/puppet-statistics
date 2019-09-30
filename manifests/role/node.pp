@@ -6,7 +6,7 @@ class statistics::role::node (
   file { 'collectd_config': 
      ensure  => 'present',  
      path    => $::statistics::config_path,    
-     content => template(''), 
+     content => epp('statistics/collectd_config_node.epp',{ "server_ip" => $::statistics::server_ip, "port" => $::statistics::collectd_listen_port, "username" => $::statistics::collectd_username, "password" => $::statistics::collectd_password }),
      require => Package['collectd'],         
   }                                            
    
