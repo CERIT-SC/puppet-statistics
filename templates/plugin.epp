@@ -1,0 +1,10 @@
+<%- | String $name,
+      Hash   $options = {},
+| -%>
+
+LoadPlugin <%= $name %>
+<Plugin <%= $name %>>
+  <% $options.each |$key, $value| { -%>
+     <%= $key %> <%= $value %>
+  <% } -%>
+</Plugin>

@@ -1,0 +1,21 @@
+<%- | String $dir           = "/var/lib/influxdb",
+      String $collectd_port = "25800",
+      String $database_name = "collectd"
+| -%>
+
+[meta]
+  # Where the metadata/raft database is stored
+  dir = "<%= $dir %>/meta"
+
+[data]
+  # The directory where the TSM storage engine stores TSM files.
+  dir = "<%= $dir %>/data"
+
+  # The directory where the TSM storage engine stores WAL files.
+  wal-dir = "<%= $dir %>/wal"
+
+[[collectd]]
+   enabled = true
+   bind-address = ":<%= $collectd_port %>"
+   database = "<%= $database_name %>"
+   typesdb = "/usr/share/collectd/types.db" 

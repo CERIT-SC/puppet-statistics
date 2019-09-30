@@ -5,7 +5,7 @@ define statistics::plugin (
      ensure  => 'present',
      name    => $title,
      path    => "${::statistics::path_to_plugins}/${title}",
-     content => template(''),
+     content => epp('statistics/plugin.epp', {"name" => $title, "options" => $settings}),
      require => Package['collectd'],
      notify  => Service['collectd'],
    } 

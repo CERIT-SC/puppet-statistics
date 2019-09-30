@@ -1,0 +1,36 @@
+<%- |  String  $database               = "prometheus",
+       String  $influxdb_port          = "25800",
+       String  $collectd_exporter_port = "9110",
+       String  $listen_port            = "25826",
+| -%> 
+
+LoadPlugin syslog
+<Plugin syslog>
+        LogLevel error
+</Plugin>
+
+LoadPlugin network
+
+<Plugin network>
+  <% if $database == "influxdb" { -%>
+    # INFLUXDB
+    <Server "127.0.0.1" "<%= $influxdb_port %>">
+      SecurityLevel none
+    </Server>
+  <% } -%>
+
+  <% if $database == "prometheus" { -%>
+    # COLLECTD_EXPORTER
+    <Server "127.0.0.1" "<%= $collectd_exporter_port %>">
+      SecurityLevel none
+    </Server>
+  <% } -%>
+
+  <Listen "127.0.0.1" "<%= $listen_port %>">
+      SecurityLevel Sign
+      AuthFile "/etc/collectd.passwd"
+  </Listen>
+  Forward true
+</Plugin>
+
+Include "/etc/collectd.d"
