@@ -5,7 +5,7 @@ class statistics (
   String                         $collectd_config_path      = $::statistics::params::collectd_config_path,
   String                         $path_to_plugins           = $::statistics::params::path_to_plugins,
   Boolean                        $server                    = $::statistics::params::server,
-  Enum['influxdb', 'prometheus'] $database                  = $::statistics::params::database,
+  Enum['influxdb', 'prometheus2'] $database                  = $::statistics::params::database,
   Integer                        $influx_port               = $::statistics::params::influx_port,
   String                         $influx_storage            = $::statistics::params::influx_storage,
   String                         $prometheus_storage        = $::statistics::params::prometheus_storage,
