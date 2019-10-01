@@ -1,6 +1,5 @@
 class statistics::role::node (
   Hash $plugins = $::statistics::plugins,
-  String        = $::statistics::server_ip,
 ) {
 
   file { 'collectd_config': 

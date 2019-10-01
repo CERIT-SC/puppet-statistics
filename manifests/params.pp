@@ -9,14 +9,15 @@ class statistics::params  {
   $collectd_password    = lookup('statistics::collectd_password')
   
   # SERVER STUFF
-  $server_packages      = ['grafana']
-  $server               = false
-  $collectd_exp_port    = 9110
-  $database             = "prometheus"
-  $influx_port          = "25800"
-  $influx_storage       = "/var/lib/influxdb/"
-  $influx_database_name = "collectd"
-  $prometheus_storage   = "/var/lib/prometheus/data"
+  $server_packages           = ['grafana']
+  $server                    = false
+  $collectd_exp_port         = 9110
+  $database                  = "prometheus"
+  $influx_port               = "25800"
+  $influx_storage            = "/var/lib/influxdb/"
+  $influx_database_name      = "collectd"
+  $prometheus_storage        = "/var/lib/prometheus/data"
+  $prometheus_retention_time = "15d"
 
   #NODE STUFF
   $node_packages = ['collectd']

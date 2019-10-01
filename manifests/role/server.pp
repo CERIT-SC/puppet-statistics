@@ -34,6 +34,9 @@ class statistics::role::server
   create_resources("statistics::plugin", $plugins)
 
   if $::statistics::database == "prometheus" {
+      
+      $flags_for_service = "--storage.tsdb.path ${::statistics::prometheus_storage} --storage.tsdb.retention.time ${::statistics::prometheus_retention_time}"
+ 
       package { 'collectd_exporter':
         ensure  => "present",
       }
@@ -50,12 +53,33 @@ class statistics::role::server
         content => epp('statistics/prometheus_config.epp'),
         require => Package['database for grafana'],  
       }
+ 
+      $storage = $::statistics::prometheus_storage
+
+      file { $storage:
+        ensure => directory,
+        group  => "prometheus",
+        owner  => "prometheus",
+        mode   => 0755,
+      }
+
   } elsif $::statistics::database == "influxdb" {
+      
+      $flags_for_service = ""
+      $storage = $::statistics::influx_storage
+      
       file { 'config for influxdb':
         ensure  => 'present',
         path    => '/etc/influxdb/influxdb.conf',
-        content => epp('statistics/influxdb_config.epp', { "dir" => $::statistics::influx_storage, "collectd_port" => $::statistics::influx_port, "database_name" => $::statistics::influx_database_name }),
+        content => epp('statistics/influxdb_config.epp', { "storage" => $storage, "collectd_port" => $::statistics::influx_port, "database_name" => $::statistics::influx_database_name }),
         require => Package['database for grafana'],
+      }
+
+      file{ $storage:
+        ensure  =>  directory,
+        group   => "influxdb",
+        owner   => "influxdb",
+        mode    =>  0755,
       }
   } else {
       fail("Use only influxdb or prometheus as database")
@@ -70,7 +94,8 @@ class statistics::role::server
   service { $database:
     enable  => true,
     ensure  => 'running',
-    require => File["config for ${database}"],
+    flags   => $flags_for_service,
+    require => [ File[$storage], File["config for ${database}"] ],
   }
   
   service { 'grafana':
