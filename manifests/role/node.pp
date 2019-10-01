@@ -1,19 +1,31 @@
 class statistics::role::node (
-  Hash $plugins = $::statistics::plugins,
+  Array $plugins = $::statistics::plugins,
 ) {
 
   file { 'collectd_config': 
      ensure  => 'present',  
-     path    => $::statistics::config_path,    
-     content => epp('statistics/collectd_config_node.epp',{ "server_ip" => $::statistics::server_ip, "port" => $::statistics::collectd_listen_port, "username" => $::statistics::collectd_username, "password" => $::statistics::collectd_password }),
+     path    => $::statistics::collectd_config_path,    
+     content => epp('statistics/collectd_config_node.epp',{ "server_ip" => $::statistics::server_ip, "port" => $::statistics::collectd_listen_port, "username" => $::statistics::collectd_username, "password" => $::statistics::collectd_password, "dir" => $::statistics::path_to_plugins }),
      require => Package['collectd'],         
   }                                            
    
-  create_resources('statistics::plugin', $plugins) 
+  $plugins.each |$plugin| {
+    if $plugin =~ Hash {
+         $name     = keys($plugin)[0]
+         $settings = $plugin[$name]['settings']
+     } else {
+         $name     = $plugin
+         $settings = {}
+     }   
+
+     statistics::plugin { $name: 
+         settings => $settings,
+     }   
+  }
 
   service { 'collectd':
      enable  => true,
      ensure  => 'running',
-     require => [ Pacakage['collectd'], File['collectd_config'] ],
+     require => [ Package['collectd'], File['collectd_config'] ],
   }
 }

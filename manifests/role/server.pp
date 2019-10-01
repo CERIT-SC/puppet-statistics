@@ -14,6 +14,7 @@ class statistics::role::server
                           "influx_port"            => $::statistics::influx_port,
                           "listen_port"            => $::statistics::collectd_listen_port,
                           "collectd_exporter_port" => $::statistics::collectd_exp_port,
+                          "dir"                    => $::statistics::path_to_plugins,
                         }
 
   file { 'collectd_config':

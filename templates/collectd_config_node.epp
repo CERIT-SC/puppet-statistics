@@ -1,7 +1,8 @@
-<%- | String $server_ip,
-      String $port,
-      String $username,
-      String $password,
+<%- | String  $server_ip,
+      Integer $port,
+      String  $username,
+      String  $password,
+      String  $dir,
 
 | -%>
 LoadPlugin network
@@ -13,3 +14,4 @@ LoadPlugin network
         </Server>
 </Plugin>
 
+Include "<%= $dir %>"
