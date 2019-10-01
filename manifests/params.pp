@@ -26,7 +26,7 @@ class statistics::params  {
   $server_packages           = ['grafana']
   $server                    = false
   $collectd_exp_port         = 9110
-  $database                  = "prometheus"
+  $database                  = "prometheus2"
   $influx_port               = 25800
   $influx_storage            = "/var/lib/influxdb/"
   $influx_database_name      = "collectd"

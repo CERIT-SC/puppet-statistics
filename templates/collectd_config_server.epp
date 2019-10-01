@@ -1,7 +1,7 @@
 <%- |  String  $database               = "prometheus",
-       String  $influxdb_port          = "25800",
-       String  $collectd_exporter_port = "9110",
-       String  $listen_port            = "25826",
+       Integer $influxdb_port          = 25800,
+       Integer $collectd_exporter_port = 9110,
+       Integer $listen_port            = 25826,
        String  $dir,
 | -%> 
 

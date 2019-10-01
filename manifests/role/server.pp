@@ -1,17 +1,19 @@
 class statistics::role::server
 {
+  $database = $::statistics::database
+
   package { $::statistics::server_packages :
     ensure => "present",
   }
   
   package { 'database for grafana':
-   name   => $database.
+   name   => $database,
    ensure => "present",
   }
 
   $_data_for_template = { 
                           "database"               => $::statistics::database,
-                          "influx_port"            => $::statistics::influx_port,
+                          "influxdb_port"          => $::statistics::influx_port,
                           "listen_port"            => $::statistics::collectd_listen_port,
                           "collectd_exporter_port" => $::statistics::collectd_exp_port,
                           "dir"                    => $::statistics::path_to_plugins,
@@ -19,7 +21,7 @@ class statistics::role::server
 
   file { 'collectd_config':
     ensure  => 'present',
-    path    => $::statistics::config_path,
+    path    => $::statistics::config_path_config_path,
     content => epp('statistics/collectd_config_server.epp', $_data_for_template),
     require => Package['collectd'],
   }
@@ -27,14 +29,26 @@ class statistics::role::server
 
   file { 'collectd_auth':
     ensure  => 'present',
-    path    => '/etc/collectd.passwd'
+    path    => '/etc/collectd.passwd',
     content => "${::statistics::collectd_username}: ${statistics::collectd_password}",
     require => Package['collectd'],  
   }
 
-  create_resources("statistics::plugin", $plugins)
+  $::statistics::plugins.each |$plugin| {
+    if $plugin =~ Hash {
+         $name     = keys($plugin)[0]
+         $settings = $plugin[$name]['settings']
+     } else {
+         $name     = $plugin
+         $settings = {}
+     }
 
-  if $::statistics::database == "prometheus" {
+     statistics::plugin { $name:
+         settings => $settings,
+     }
+  }
+
+  if $::statistics::database == "prometheus2" {
       
       $flags_for_service = "--storage.tsdb.path ${::statistics::prometheus_storage} --storage.tsdb.retention.time ${::statistics::prometheus_retention_time}"
  
@@ -48,7 +62,7 @@ class statistics::role::server
         require => Package['collectd_exporter'],
       }
      
-      file { 'config for prometheus':
+      file { 'config for prometheus2':
         ensure  => 'present',
         path    => '/etc/prometheus/prometheus.yml',
         content => epp('statistics/prometheus_config.epp'),
@@ -63,6 +77,14 @@ class statistics::role::server
         owner  => "prometheus",
         mode   => 0755,
       }
+      
+      service { "prometheus":
+        enable  => true,
+        ensure  => 'running',
+        flags   => $flags_for_service,
+        require => [ File[$storage], File["config for ${database}"] ],
+      }
+
 
   } elsif $::statistics::database == "influxdb" {
       
@@ -80,10 +102,18 @@ class statistics::role::server
         ensure  =>  directory,
         group   => "influxdb",
         owner   => "influxdb",
-        mode    =>  0755,
+        mode    =>  "0755",
       }
+
+      service { "influxdb":
+        enable  => true,
+        ensure  => 'running',
+        flags   => $flags_for_service,
+        require => [ File[$storage], File["config for ${database}"] ],
+      }
+
   } else {
-      fail("Use only influxdb or prometheus as database")
+      fail("Use only influxdb or prometheus2 as database")
   }
   
   service { 'collectd':
@@ -92,13 +122,6 @@ class statistics::role::server
     require => [ File['collectd_auth'], File['collectd_config'], Package['collectd'] ],
   }
 
-  service { $database:
-    enable  => true,
-    ensure  => 'running',
-    flags   => $flags_for_service,
-    require => [ File[$storage], File["config for ${database}"] ],
-  }
-  
   service { 'grafana':
     enable  => true,
     ensure  => 'running',
