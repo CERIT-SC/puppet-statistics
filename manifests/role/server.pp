@@ -21,7 +21,7 @@ class statistics::role::server
 
   file { 'collectd_config':
     ensure  => 'present',
-    path    => $::statistics::config_path_config_path,
+    path    => $::statistics::collectd_config_path,
     content => epp('statistics/collectd_config_server.epp', $_data_for_template),
     require => Package['collectd'],
   }
@@ -75,7 +75,7 @@ class statistics::role::server
         ensure => directory,
         group  => "prometheus",
         owner  => "prometheus",
-        mode   => 0755,
+        mode   => "0755",
       }
       
       service { "prometheus":
@@ -122,9 +122,8 @@ class statistics::role::server
     require => [ File['collectd_auth'], File['collectd_config'], Package['collectd'] ],
   }
 
-  service { 'grafana':
+  service { 'grafana-server':
     enable  => true,
     ensure  => 'running',
-    require => Service[$database],
   }
 }
