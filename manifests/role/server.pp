@@ -5,6 +5,13 @@ class statistics::role::server
   package { $::statistics::server_packages:
     ensure => "present",
   }
+
+  file { 'grafana config':
+    ensure  => 'present',
+    path    => '/etc/grafana/grafana.ini',
+    content => epp('statistics/grafana_config.epp', { "protocol" => $::statistics::grafana_web_protocol, "path_to_cert_file" => $::statistics::database_path_cert_file, "path_to_cert_key" => $::statistics::database_path_cert_key }), 
+    require => Package[$::statistics::server_packages],
+  }
   
   package { $databases:
    ensure => "present",
@@ -67,7 +74,7 @@ class statistics::role::server
             ensure  => 'present',
             path    => '/etc/prometheus/prometheus.yml',
             content => epp('statistics/prometheus_config.epp'),
-            require => Package[$database],  
+            require => Package[$databases],  
           }
      
           $storage = $::statistics::prometheus_storage
@@ -95,7 +102,7 @@ class statistics::role::server
             ensure  => 'present',
             path    => '/etc/influxdb/influxdb.conf',
             content => epp('statistics/influxdb_config.epp', { "storage" => $storage, "collectd_port" => $::statistics::influx_port, "database_name" => $::statistics::influx_database_name, "bind_address" => $::statistics::influx_bind_address }),
-            require => Package[$database],
+            require => Package[$databases],
           }
     
           file{ $storage:
@@ -126,5 +133,6 @@ class statistics::role::server
   service { 'grafana-server':
     enable  => true,
     ensure  => 'running',
+    require => File['grafana config'],
   }
 }

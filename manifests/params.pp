@@ -27,6 +27,9 @@ class statistics::params  {
   $server                    = false
   $collectd_exp_port         = 9110
   $databases                 = ["prometheus2"]
+  $database_web_protocol     = "http"
+  $database_path_cert_file   = undef
+  $database_path_cert_key    = undef
   $influx_port               = 25800
   $influx_storage            = "/var/lib/influxdb/"
   $influx_database_name      = "collectd"

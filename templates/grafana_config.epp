@@ -1,0 +1,12 @@
+<%- | String            $protocol = "http"
+      Optional [String] $path_to_cert_file,
+      Optional [String] $path_to_cert_key,
+| -%>
+
+[server]
+protocol = <%= $protocol %>
+<% if $protocol == "https" { -%>
+http_port = 443
+cert_file = <%= $path_to_cert_file %>
+cert_key = <%= $path_to_cert_key %>
+<% } -%>
