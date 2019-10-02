@@ -86,11 +86,17 @@ class statistics::role::server
             mode   => "0755",
           }
           
+          file { 'parameters for service': 
+            path    => '/etc/default/prometheus',
+            content => "PROMETHEUS_OPTS=\'${::flags_for_service}'",
+            ensure  => 'present',
+            mod     => "0755", 
+          }
+          
           service { "prometheus":
             enable  => true,
             ensure  => 'running',
-            flags   => $flags_for_service,
-            require => [ File[$storage], File["config for ${database}"] ],
+            require => [ File['parameters for service'], File[$storage], File["config for ${database}"] ],
           }
     
       } elsif $database == "influxdb" {
