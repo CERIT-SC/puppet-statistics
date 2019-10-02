@@ -90,7 +90,7 @@ class statistics::role::server
             path    => '/etc/default/prometheus',
             content => "PROMETHEUS_OPTS=\'${::flags_for_service}'",
             ensure  => 'present',
-            mod     => "0755", 
+            mode    => "0755", 
           }
           
           service { "prometheus":
