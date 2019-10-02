@@ -1,6 +1,6 @@
-<%- | String            $protocol = "http"
-      Optional [String] $path_to_cert_file,
-      Optional [String] $path_to_cert_key,
+<%- | String           $protocol = "http",
+      Optional[String] $path_to_cert_file,
+      Optional[String] $path_to_cert_key,
 | -%>
 
 [server]

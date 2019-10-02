@@ -1,7 +1,7 @@
-<%- | String $storage       = "/var/lib/influxdb",
-      String $collectd_port = "25800",
-      String $database_name = "collectd"
-      String $bind_address  = "127.0.0.1:8086"
+<%- | String  $storage       = "/var/lib/influxdb",
+      Integer $collectd_port = 25800,
+      String  $database_name = "collectd",
+      String  $bind_address  = "127.0.0.1:8086"
 | -%>
 
 [meta]
