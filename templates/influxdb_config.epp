@@ -1,6 +1,7 @@
 <%- | String $storage       = "/var/lib/influxdb",
       String $collectd_port = "25800",
       String $database_name = "collectd"
+      String $bind_address  = "127.0.0.1:8086"
 | -%>
 
 [meta]
@@ -19,3 +20,6 @@
    bind-address = ":<%= $collectd_port %>"
    database = "<%= $database_name %>"
    typesdb = "/usr/share/collectd/types.db" 
+
+[http]
+   bind-address = "<%= $bind_address %>"

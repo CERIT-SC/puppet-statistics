@@ -30,8 +30,10 @@ class statistics::params  {
   $influx_port               = 25800
   $influx_storage            = "/var/lib/influxdb/"
   $influx_database_name      = "collectd"
+  $influx_bind_address       = "127.0.0.1:8086"
   $prometheus_storage        = "/var/lib/prometheus/data"
   $prometheus_retention_time = "15d"
+  $prometheus_listen_address = "127.0.0.1:9090"
 
   #NODE STUFF
   $node_packages = ['collectd']

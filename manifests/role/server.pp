@@ -12,7 +12,7 @@ class statistics::role::server
   }
 
   $_data_for_template = { 
-                          "database"               => $::statistics::database,
+                          "database"               => $database,
                           "influxdb_port"          => $::statistics::influx_port,
                           "listen_port"            => $::statistics::collectd_listen_port,
                           "collectd_exporter_port" => $::statistics::collectd_exp_port,
@@ -50,7 +50,7 @@ class statistics::role::server
 
   if $::statistics::database == "prometheus2" {
       
-      $flags_for_service = "--storage.tsdb.path ${::statistics::prometheus_storage} --storage.tsdb.retention.time ${::statistics::prometheus_retention_time}"
+      $flags_for_service = "--storage.tsdb.path ${::statistics::prometheus_storage} --storage.tsdb.retention.time ${::statistics::prometheus_retention_time} --web.listen-address ${::statistics::prometheus_listen_address}"
  
       package { 'collectd_exporter':
         ensure  => "present",
@@ -94,7 +94,7 @@ class statistics::role::server
       file { 'config for influxdb':
         ensure  => 'present',
         path    => '/etc/influxdb/influxdb.conf',
-        content => epp('statistics/influxdb_config.epp', { "storage" => $storage, "collectd_port" => $::statistics::influx_port, "database_name" => $::statistics::influx_database_name }),
+        content => epp('statistics/influxdb_config.epp', { "storage" => $storage, "collectd_port" => $::statistics::influx_port, "database_name" => $::statistics::influx_database_name, "bind_address" => $::statistics::influx_bind_address }),
         require => Package['database for grafana'],
       }
 
