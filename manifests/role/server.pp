@@ -58,7 +58,7 @@ class statistics::role::server
 
       if $database == "prometheus2" {
           
-          $flags_for_service = "--storage.tsdb.path ${::statistics::prometheus_storage} --storage.tsdb.retention.time ${::statistics::prometheus_retention_time} --web.listen-address ${::statistics::prometheus_listen_address}"
+          $flags_for_service = "--config.file /etc/prometheus/prometheus.yml --storage.tsdb.path ${::statistics::prometheus_storage} --storage.tsdb.retention.time ${::statistics::prometheus_retention_time} --web.listen-address ${::statistics::prometheus_listen_address}"
      
           package { 'collectd_exporter':
             ensure  => "present",
@@ -88,9 +88,9 @@ class statistics::role::server
           
           file { 'parameters for service': 
             path    => '/etc/default/prometheus',
-            content => "PROMETHEUS_OPTS=\'${::flags_for_service}'",
+            content => "PROMETHEUS_OPTS=\'${flags_for_service}\'",
             ensure  => 'present',
-            mode    => "0755", 
+            mode    => "0644", 
           }
           
           service { "prometheus":
