@@ -1,4 +1,4 @@
-<%- |  Array[String] $databases              = ["prometheus"],
+<%- |  Array[String] $databases              = ["prometheus2"],
        Integer       $influxdb_port          = 25800,
        Integer       $collectd_exporter_port = 9110,
        Integer       $listen_port            = 25826,
@@ -20,7 +20,7 @@ LoadPlugin network
     </Server>
   <% } -%>
 
-  <% if member($databases,"prometheus") { -%>
+  <% if member($databases, "prometheus2") { -%>
     # COLLECTD_EXPORTER
     <Server "127.0.0.1" "<%= $collectd_exporter_port %>">
       SecurityLevel none
