@@ -1,8 +1,8 @@
-<%- |  String  $database               = "prometheus",
-       Integer $influxdb_port          = 25800,
-       Integer $collectd_exporter_port = 9110,
-       Integer $listen_port            = 25826,
-       String  $dir,
+<%- |  Array[String] $databases              = ["prometheus"],
+       Integer       $influxdb_port          = 25800,
+       Integer       $collectd_exporter_port = 9110,
+       Integer       $listen_port            = 25826,
+       String        $dir,
 | -%> 
 
 LoadPlugin syslog
@@ -13,14 +13,14 @@ LoadPlugin syslog
 LoadPlugin network
 
 <Plugin network>
-  <% if $database == "influxdb" { -%>
+  <% if member($databases, "influxdb") { -%>
     # INFLUXDB
     <Server "127.0.0.1" "<%= $influxdb_port %>">
       SecurityLevel none
     </Server>
   <% } -%>
 
-  <% if $database == "prometheus" { -%>
+  <% if member($databases,"prometheus") { -%>
     # COLLECTD_EXPORTER
     <Server "127.0.0.1" "<%= $collectd_exporter_port %>">
       SecurityLevel none
