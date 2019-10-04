@@ -1,7 +1,11 @@
-<%- | String $name,
-      Hash   $options = {},
+<%- | String  $name,
+      Integer $interval = 300,
+      Hash    $options = {},
 | -%>
-LoadPlugin <%= $name %>
+<LoadPlugin <%= $name %>
+   Interval <%= $interval %>
+</LoadPlugin>
+
 <Plugin <%= $name %>>
   <% $options.each |$key, $value| { -%>
      <%= $key %> = <%= $value %>
