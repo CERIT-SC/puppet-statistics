@@ -12,7 +12,7 @@ Puppet::Functions.create_function(:'statistics::create_dashboard') do
       end
     
     def create_object(nameOfDashboard, arguments, url, key)
-        if check_if_dashboard_exists(nameOfDashboard, url, key)
+        if check_if_dashboard_exists(nameOfDashboard, url, key).nil?
             url += "/api/dashboards/db"
             begin
                 RestClient::Request.execute(:url => url, :method => "POST", :verify_ssl => false, :timeout => 10, :payload => arguments.to_json, :headers => { "Content-Type" => "application/json", "Accept" => "application/json", "Authorization" => "Bearer #{key}"})
