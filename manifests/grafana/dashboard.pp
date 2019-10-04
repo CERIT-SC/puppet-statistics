@@ -47,9 +47,9 @@ define statistics::grafana::dashboard (
                            "uid"       => undef,
                            "title"     => "${name_of_dashboard}",
                            "panels"    => $attribute_panels,      
+                       },
                            "folderId"  => 0,
                            "overwrite" => false,
-                       }
                   }
 
   statistics::create_dashboard( $name_of_dashboard, $data_for_api, $url, $apikey)
