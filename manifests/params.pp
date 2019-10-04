@@ -7,7 +7,7 @@ class statistics::params  {
               $path_to_plugins      = "/etc/collectd/collectd.conf.d"
     }
 
-    'CentOS': {
+    'CentOS', 'RedHat': {
               $collectd_config_path = "/etc/collectd.conf"
               $path_to_plugins      = "/etc/collectd.d"
     }

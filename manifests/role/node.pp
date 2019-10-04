@@ -7,7 +7,13 @@ class statistics::role::node (
      path    => $::statistics::collectd_config_path,    
      content => epp('statistics/collectd_config_node.epp',{ "server_ip" => $::statistics::server_ip, "port" => $::statistics::collectd_listen_port, "username" => $::statistics::collectd_username, "password" => $::statistics::collectd_password, "dir" => $::statistics::path_to_plugins }),
      require => Package['collectd'],         
-  }                                            
+  }
+  
+  file { $::statistics::path_to_plugins:
+     ensure  => 'directory',
+     mode    => '0644',
+     require => Package['collectd'],
+  }                                    
    
   $plugins.each |$plugin| {
     if $plugin =~ Hash {
@@ -26,6 +32,6 @@ class statistics::role::node (
   service { 'collectd':
      enable  => true,
      ensure  => 'running',
-     require => [ Package['collectd'], File['collectd_config'] ],
+     require => [ File[$::statistics::path_to_plugins], Package['collectd'], File['collectd_config'] ],
   }
 }
