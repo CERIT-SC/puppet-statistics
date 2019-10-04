@@ -28,6 +28,9 @@ class statistics::params  {
   $collectd_exp_port         = 9110
   $databases                 = ["prometheus2"]
   $grafana_web_protocol      = "http"
+  $grafana_dashboards        = {}
+  $grafana_url               = "http://127.0.0.1"
+  $grafana_apikey            = "SECRET KEY"
   $database_path_cert_file   = undef
   $database_path_cert_key    = undef
   $influx_port               = 25800

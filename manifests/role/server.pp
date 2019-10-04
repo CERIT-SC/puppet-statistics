@@ -141,4 +141,15 @@ class statistics::role::server
     ensure  => 'running',
     require => File['grafana config'],
   }
+
+  $::statistics::grafana_dashboards.each |$dashboard| {
+      $name_of_dashboard = keys($dashboard)[0]
+
+      statistics::grafana::dashboard { $name_of_dashboard:
+          apikey => $::statistics::grafana_apikey,
+          url    => $::statistics::grafana_url, 
+          panels => $dashboard[$name_of_dashboard]['panels'],
+      }
+  }
+
 }
