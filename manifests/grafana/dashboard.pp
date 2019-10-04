@@ -20,7 +20,7 @@ define statistics::grafana::dashboard (
         } else {
             $legend = {}
         }
-        
+
         $queries = $value[1]['queries'].reduce([]) |$accu, $query| {
             if $query =~ Hash {
                 $name_of_query = keys($query)[0]
@@ -30,7 +30,16 @@ define statistics::grafana::dashboard (
             }
         }
 
-        $memo + [{ "id" => undef, "datasource" => $datasource, "targets" => $queries, "title" => $nameOfPanel, "type" => $type, "legend" => $legend }]
+
+        if has_key($value[1], 'yaxes') {
+            $yaxes = $value[1]['yaxes']
+            $memo + [{ "id" => undef, "datasource" => $datasource, "targets" => $queries, "title" => $nameOfPanel, "type" => $type, "legend" => $legend, "yaxes" => $yaxes, "xaxis" => {"show" => true}}]
+        } else {
+            $yaxes = []
+            $memo + [{ "id" => undef, "datasource" => $datasource, "targets" => $queries, "title" => $nameOfPanel, "type" => $type, "legend" => $legend }]
+        }
+        
+        $memo + [{ "id" => undef, "datasource" => $datasource, "targets" => $queries, "title" => $nameOfPanel, "type" => $type, "legend" => $legend, "yaxes" => $yaxes }]
    }   
      $data_for_api = {
                       "dashboard" => {
