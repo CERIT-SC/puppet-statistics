@@ -42,15 +42,26 @@ class statistics::role::server
   
   $::statistics::plugins.each |$plugin| {
     if $plugin =~ Hash {
-         $name     = keys($plugin)[0]
-         $settings = $plugin[$name]['settings']
+         $name = keys($plugin)[0]
+         if has_key($plugin[$name], 'settings') {
+            $settings = $plugin[$name]['settings']
+         } else {
+            $settings = {}
+         }
+         if has_key($plugin[$name], 'interval') {
+            $interval = $plugin[$name]['interval']
+         } else {
+            $interval = 300
+         }
      } else {
          $name     = $plugin
          $settings = {}
-     }
+         $interval = 300
+     }   
 
      statistics::plugin { $name:
          settings => $settings,
+         interval => $interval,
      }
   }
 

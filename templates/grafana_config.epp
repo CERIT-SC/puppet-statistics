@@ -10,3 +10,13 @@ http_port = 443
 cert_file = <%= $path_to_cert_file %>
 cert_key = <%= $path_to_cert_key %>
 <% } -%>
+
+[auth.anonymous]
+# enable anonymous access
+enabled = true
+
+# specify organization name that should be used for unauthenticated users
+org_name = adm.cerit-sc.cz
+
+# specify role for unauthenticated users
+org_role = Viewer
