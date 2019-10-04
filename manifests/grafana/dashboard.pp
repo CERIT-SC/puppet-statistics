@@ -49,7 +49,7 @@ define statistics::grafana::dashboard (
                            "panels"    => $attribute_panels,      
                        },
                            "folderId"  => 0,
-                           "overwrite" => false,
+                           "overwrite" => true,
                   }
 
   statistics::create_dashboard( $name_of_dashboard, $data_for_api, $url, $apikey)
