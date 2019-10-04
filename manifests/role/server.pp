@@ -61,6 +61,7 @@ class statistics::role::server
 
      statistics::plugin { $name:
          settings => $settings,
+         interval => $interval,
      }
   }
 
