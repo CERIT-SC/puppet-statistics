@@ -2,7 +2,7 @@
       Integer $interval = 300,
       Hash    $options = {},
 | -%>
-<LoadPlugin <%= $name %>
+<LoadPlugin <%= $name %>>
    Interval <%= $interval %>
 </LoadPlugin>
 
@@ -10,4 +10,4 @@
   <% $options.each |$key, $value| { -%>
      <%= $key %> = <%= $value %>
   <% } -%>
-</Plugin>
+  </Plugin>
