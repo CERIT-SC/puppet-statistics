@@ -153,11 +153,11 @@ class statistics::role::server
     require => File['grafana config'],
   }
 
-  $::statistics::grafana_dashboards.each |$name_of_dashboard, $dashboard| {
+  $::statistics::grafana_dashboards.each |$name_of_dashboard, $options| {
       statistics::grafana::dashboard { $name_of_dashboard:
-          apikey => $::statistics::grafana_apikey,
-          url    => $::statistics::grafana_url,
-          panels => $dashboard['panels'],
+          apikey  => $::statistics::grafana_apikey,
+          url     => $::statistics::grafana_url,
+          options => $options,
       }
   }
 }
