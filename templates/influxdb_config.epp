@@ -1,7 +1,7 @@
-<%- | String  $storage       = "/var/lib/influxdb",
-      Integer $collectd_port = 25800,
-      String  $database_name = "collectd",
-      String  $bind_address  = "127.0.0.1:8086"
+<%- | String  $storage                            = "/var/lib/influxdb",
+      Integer $influx_listening_port_for_collectd = 25800,
+      String  $database_name                      = "collectd",
+      String  $bind_address                       = "127.0.0.1:8086"
 | -%>
 
 [meta]
@@ -17,7 +17,7 @@
 
 [[collectd]]
    enabled = true
-   bind-address = ":<%= $collectd_port %>"
+   bind-address = ":<%= $influx_listening_port_for_collectd %>"
    database = "<%= $database_name %>"
    typesdb = "/usr/share/collectd/types.db" 
 

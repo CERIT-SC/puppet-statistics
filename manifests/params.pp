@@ -3,13 +3,13 @@ class statistics::params  {
   # DEFAULT STUFF
   case $facts['operatingsystem'] {
     'Debian': {
-              $collectd_config_path = "/etc/collectd/collectd.conf"
-              $path_to_plugins      = "/etc/collectd/collectd.conf.d"
+              $collectd_config_path     = "/etc/collectd/collectd.conf"
+              $collectd_path_to_plugins = "/etc/collectd/collectd.conf.d"
     }
 
     'CentOS', 'RedHat': {
-              $collectd_config_path = "/etc/collectd.conf"
-              $path_to_plugins      = "/etc/collectd.d"
+              $collectd_config_path     = "/etc/collectd.conf"
+              $collectd_path_to_plugins = "/etc/collectd.d"
     }
 
     default: {
@@ -17,7 +17,7 @@ class statistics::params  {
     }
   }
 
-  $plugins              = []
+  $collectd_plugins     = []
   $collectd_listen_port = 25826
   $collectd_username    = lookup('statistics::collectd_username')
   $collectd_password    = lookup('statistics::collectd_password')
@@ -42,5 +42,5 @@ class statistics::params  {
   $prometheus_listen_address = "127.0.0.1:9090"
 
   #NODE STUFF
-  $node_packages = ['collectd']
+  $type_of_probes = ["telegraf"]
 }

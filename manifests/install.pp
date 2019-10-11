@@ -1,5 +1,5 @@
 class statistics::install {
-  package { $::statistics::node_packages:  # INSTALL ONLY COLLECTD
+  package { $::statistics::type_of_probes:  # INSTALL ONLY monitoring tools
     ensure => 'present',
   }
 }
