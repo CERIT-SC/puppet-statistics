@@ -1,4 +1,4 @@
-define statistics::plugin (
+define statistics::collectd::plugin (
    Hash    $settings = {},
    Integer $interval = 300,
 ) {

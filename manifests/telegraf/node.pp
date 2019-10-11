@@ -9,9 +9,9 @@ class statistics::telegraf::node {
    }
 
    $::statistics::telegraf_plugins.each |$plugin| {
-
-       statistics::telegraf::plugin { $plugin:
-           settings => $plugin['settings'],
+       $name = keys($plugin)[0]
+       statistics::telegraf::plugin { $name:
+           settings => $plugin[$name]['settings'],
        }
    }
    
