@@ -11,7 +11,7 @@ class statistics::collectd::server {
     ensure  => 'present',
     path    => $::statistics::collectd_config_path,
     content => epp('statistics/collectd_config_server.epp', $_data_for_template),
-    require => Package['collectd'],
+    require => Package[$::statistics::type_of_probs],
   }
 
 
@@ -19,7 +19,7 @@ class statistics::collectd::server {
     ensure  => 'present',
     path    => '/etc/collectd.passwd',
     content => "${::statistics::collectd_username}: ${statistics::collectd_password}",
-    require => Package['collectd'],
+    require => Package[$::statistics::type_of_probs],
   }
 
   $::statistics::collectd_plugins.each |$plugin| {
@@ -62,6 +62,6 @@ class statistics::collectd::server {
   service { 'collectd':
     enable  => true,
     ensure  => 'running',
-    require => [ File['collectd_auth'], File['collectd_config'], Package['collectd'] ],
+    require => [ File['collectd_auth'], File['collectd_config'], Package[$::statistics::type_of_probs] ],
   }
 }

@@ -3,13 +3,13 @@ class statistics::collectd::node {
      ensure  => 'present',
      path    => $::statistics::collectd_config_path,
      content => epp('statistics/collectd_config_node.epp',{ "server_ip" => $::statistics::server_ip, "port" => $::statistics::collectd_listen_port, "username" => $::statistics::collectd_username, "password" => $::statistics::collectd_password, "dir" => $::statistics::collectd_path_to_plugins }),
-     require => Package['collectd'],
+     require => Package[$::statistics::type_of_probs],
   }
 
   file { $::statistics::collectd_path_to_plugins:
      ensure  => 'directory',
      mode    => '0644',
-     require => Package['collectd'],
+     require => Package[$::statistics::type_of_probs],
   }
 
   $::statistics::collectd_plugins.each |$plugin| {
@@ -40,6 +40,6 @@ class statistics::collectd::node {
   service { 'collectd':
      enable  => true,
      ensure  => 'running',
-     require => [ File[$::statistics::collectd_path_to_plugins], Package['collectd'], File['collectd_config'] ],
+     require => [ File[$::statistics::collectd_path_to_plugins], Package[$::statistics::type_of_probs], File['collectd_config'] ],
   }
 }

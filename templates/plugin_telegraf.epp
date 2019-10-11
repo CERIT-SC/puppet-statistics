@@ -1,0 +1,7 @@
+<%- | String  $name,
+      Hash    $options = {},
+| -%>
+[[<%= $name %>]]
+     <% $options.each |$key, $value| { -%>
+         <%= $key %> = <%= $value %>
+     <% } -%>

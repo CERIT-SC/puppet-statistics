@@ -5,11 +5,16 @@ class statistics::params  {
     'Debian': {
               $collectd_config_path     = "/etc/collectd/collectd.conf"
               $collectd_path_to_plugins = "/etc/collectd/collectd.conf.d"
+              $telegraf_path_to_plugins = "/etc/telegraf/telegraf.d"
+              $telegraf_config_path     = "/etc/telegraf/telegraf.conf"
     }
 
     'CentOS', 'RedHat': {
               $collectd_config_path     = "/etc/collectd.conf"
               $collectd_path_to_plugins = "/etc/collectd.d"
+              $telegraf_path_to_plugins = "/etc/telegraf/telegraf.d"
+              $telegraf_config_path     = "/etc/telegraf/telegraf.conf"
+
     }
 
     default: {
@@ -17,10 +22,18 @@ class statistics::params  {
     }
   }
 
+  #COLLECTD
   $collectd_plugins     = []
   $collectd_listen_port = 25826
   $collectd_username    = lookup('statistics::collectd_username')
   $collectd_password    = lookup('statistics::collectd_password')
+
+  # TELEGRAF
+  $telegraf_config_options      = {}
+  $telegraf_plugins             = []
+  $telegraf_urls                = []
+  $telegraf_metric_buffer_limit = 10000 
+  $database_for_telegraf        = "telegraf"
   
   # SERVER STUFF
   $server_packages           = ['grafana']
