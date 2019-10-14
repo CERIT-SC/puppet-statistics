@@ -36,9 +36,7 @@ class statistics::role::server
   }
   
   $::statistics::grafana_plugins.each |$plugin| {
-      statistics::grafana::plugin { $plugin:
-          ensure => "present",
-      }
+      statistics::grafana::plugin { $plugin: }
   }
 
   
