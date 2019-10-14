@@ -9,6 +9,7 @@ class statistics (
   Hash                                         $grafana_dashboards           = $::statistics::params::grafana_dashboards,
   String                                       $grafana_url                  = $::statistics::params::grafana_url,
   String                                       $grafana_apikey               = $::statistics::params::grafana_apikey,
+  Array                                        $grafana_plugins              = $::statistics::params::grafana_plugins,
   Optional[String]                             $database_path_cert_file      = $::statistics::params::database_path_cert_file,
   Optional[String]                             $database_path_cert_key       = $::statistics::params::database_path_cert_key,
   Integer                                      $influx_port                  = $::statistics::params::influx_port,

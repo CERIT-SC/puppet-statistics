@@ -34,6 +34,12 @@ class statistics::role::server
           options => $dashboard['options'],
       }
   }
+  
+  $::statistics::grafana_plugins.each |$plugin| {
+      statistics::grafana::plugin { $plugin:
+          ensure => "present",
+      }
+  }
 
   
   ####### SET UP DATABASES
