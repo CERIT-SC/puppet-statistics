@@ -117,7 +117,7 @@ class statistics::role::server
               $password = $::statistics::influx_auth_password
 
               exec { 'create admin account in influxdb':
-                 command => "/usr/bin/influx --execute "CREATE USER ${username} WITH PASSWORD \'#{password}\' WITH ALL PRIVILEGES",
+                 command => "/usr/bin/influx --execute "CREATE USER ${username} WITH PASSWORD \'${password}\' WITH ALL PRIVILEGES",
                  subscribe   => Service['influxdb'],
                  require     => Package[$databases],
                  refreshonly => true,
