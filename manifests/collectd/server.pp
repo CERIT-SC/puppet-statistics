@@ -22,30 +22,7 @@ class statistics::collectd::server {
     require => Package[$::statistics::type_of_probs],
   }
 
-  $::statistics::collectd_plugins.each |$plugin| {
-    if $plugin =~ Hash {
-         $name = keys($plugin)[0]
-         if has_key($plugin[$name], 'settings') {
-            $settings = $plugin[$name]['settings']
-         } else {
-            $settings = {}
-         }
-         if has_key($plugin[$name], 'interval') {
-            $interval = $plugin[$name]['interval']
-         } else {
-            $interval = 300
-         }
-     } else {
-         $name     = $plugin
-         $settings = {}
-         $interval = 300
-     }
-
-     statistics::collectd::plugin { $name:
-         settings => $settings,
-         interval => $interval,
-     }
-  }
+  create_resources('statistics::collectd::plugin', $::statistics::collectd_plugins)
 
   if ("prometheus2" in $::statistics::databases) {
      package { 'collectd_exporter':

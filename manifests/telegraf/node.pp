@@ -8,12 +8,7 @@ class statistics::telegraf::node {
        notify  => Service['telegraf'],
    }
 
-   $::statistics::telegraf_plugins.each |$plugin| {
-       $name = keys($plugin)[0]
-       statistics::telegraf::plugin { $name:
-           settings => $plugin[$name]['settings'],
-       }
-   }
+   create_resources('statistics::telegraf::plugin', $::statistics::telegraf_plugins)
    
    service { 'telegraf':
       ensure  => "running",
