@@ -1,5 +1,6 @@
 define statistics::telegraf::plugin (
-  Hash $settings = {},
+  Hash    $settings = {},
+  Boolean $empty    = true,
 ) {
     file { "${::statistics::telegraf_path_to_plugins}/${title}.conf":
         ensure  => "present",

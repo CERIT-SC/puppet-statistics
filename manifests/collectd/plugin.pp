@@ -1,6 +1,7 @@
 define statistics::collectd::plugin (
    Hash    $settings = {},
    Integer $interval = 300,
+   Boolean $empty    = true,
 ) {
    file { "${statistics::path_to_plugins}/${title}.conf":
      ensure  => 'present',
