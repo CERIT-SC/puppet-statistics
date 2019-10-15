@@ -1,7 +1,8 @@
 <%- | String  $storage                            = "/var/lib/influxdb",
       Integer $influx_listening_port_for_collectd = 25800,
       String  $database_name                      = "collectd",
-      String  $bind_address                       = "127.0.0.1:8086"
+      String  $bind_address                       = "127.0.0.1:8086",
+      Boolean $auth_enabled                       = false,
 | -%>
 
 [meta]
@@ -23,3 +24,4 @@
 
 [http]
    bind-address = "<%= $bind_address %>"
+   auth-enabled = <%= $auth_enabled %>

@@ -59,6 +59,7 @@ class statistics::role::server
             path    => '/etc/prometheus/prometheus.yml',
             content => epp('statistics/prometheus_config.epp'),
             require => Package[$databases],
+            notify  => Service['prometheus'],
           }
      
           $storage = $::statistics::prometheus_storage
@@ -91,8 +92,9 @@ class statistics::role::server
           file { 'config for influxdb':
             ensure  => 'present',
             path    => '/etc/influxdb/influxdb.conf',
-            content => epp('statistics/influxdb_config.epp', { "storage" => $storage, "influx_listening_port_for_collectd" => $::statistics::influx_port, "database_name" => $::statistics::influx_database_name, "bind_address" => $::statistics::influx_bind_address }),
+            content => epp('statistics/influxdb_config.epp', { "storage" => $storage, "influx_listening_port_for_collectd" => $::statistics::influx_port, "database_name" => $::statistics::influx_database_name, "bind_address" => $::statistics::influx_bind_address, "auth_enabled" => $::statistics::influx_auth_enabled }),
             require => Package[$databases],
+            notify  => Service['influxdb'],
           }
     
           file{ $storage:
@@ -106,7 +108,20 @@ class statistics::role::server
             enable  => true,
             ensure  => 'running',
             flags   => $flags_for_service,
-            require => [ File[$storage], File["config for ${database}"] ],
+            require => [ File[$storage], File["config for influxdb"] ],
+          }
+
+          if $::statistics::influx_auth_enabled == true {
+
+              $username = $::statistics::influx_auth_username
+              $password = $::statistics::influx_auth_password
+
+              exec { 'create admin account in influxdb':
+                 command => "/usr/bin/influx --execute "CREATE USER ${username} WITH PASSWORD \'#{password}\' WITH ALL PRIVILEGES",
+                 subscribe   => Service['influxdb'],
+                 require     => Package[$databases],
+                 refreshonly => true,
+              }
           }
     
       } else {

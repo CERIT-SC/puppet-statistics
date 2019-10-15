@@ -51,6 +51,9 @@ class statistics::params  {
   $influx_storage            = "/var/lib/influxdb/"
   $influx_database_name      = "collectd"
   $influx_bind_address       = "127.0.0.1:8086"
+  $influx_auth_enabled       = false
+  $influx_auth_username      = "admin"
+  $influx_auth_password      = "admin"
   $prometheus_storage        = "/var/lib/prometheus/data"
   $prometheus_retention_time = "15d"
   $prometheus_listen_address = "127.0.0.1:9090"
