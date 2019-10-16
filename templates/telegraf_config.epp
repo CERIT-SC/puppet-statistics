@@ -1,8 +1,16 @@
 <%- | Integer $metric_buffer_limit = 300,
       Hash    $options             = {},
+      Hash    $global_tags         = {},
 | -%>
 [agent]	
   metric_buffer_limit = <%= $metric_buffer_limit %>
   <% $options.each |$key, $value| { -%>
      <%= $key %> = <%= $value %>
   <% } -%>
+
+<% if size($global_tags) > 0 { -%>
+[global_tags]
+  <% $global_tags.each |$key, $value| { -%>
+     <%= $key %> = <%= $value %>
+  <% } -%>
+<% } -%>

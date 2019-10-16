@@ -30,6 +30,7 @@ class statistics::params  {
 
   # TELEGRAF
   $telegraf_config_options      = {}
+  $telegraf_global_tags         = {}
   $telegraf_plugins             = []
   $telegraf_urls                = []
   $telegraf_metric_buffer_limit = 10000 
