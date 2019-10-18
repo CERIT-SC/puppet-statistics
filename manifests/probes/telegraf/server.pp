@@ -1,4 +1,4 @@
-class statistics::telegraf::server {
+class statistics::probes::telegraf::server {
 
    file { 'telegraf config':
        ensure  => "present",
@@ -9,7 +9,7 @@ class statistics::telegraf::server {
        notify  => Service['telegraf'],
    }
 
-   create_resources('statistics::telegraf::plugin', $::statistics::telegraf_plugins)
+   create_resources('statistics::probes::telegraf::plugin', $::statistics::telegraf_plugins)
 
    service { 'telegraf':
       ensure  => "running",

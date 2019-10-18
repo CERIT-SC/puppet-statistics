@@ -1,8 +1,8 @@
 class statistics::role::node {
   if "collectd" in $::statistics::type_of_probes {
-      include statistics::collectd::node
+      include statistics::probes::collectd::node
   } 
   if "telegraf" in $::statistics::type_of_probes {
-      include statistics::telegraf::node
+      include statistics::probes::telegraf::node
   }
 }

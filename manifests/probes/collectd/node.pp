@@ -1,4 +1,4 @@
-class statistics::collectd::node {
+class statistics::probes::collectd::node {
   file { 'collectd_config':
      ensure  => 'present',
      path    => $::statistics::collectd_config_path,
@@ -12,7 +12,7 @@ class statistics::collectd::node {
      require => Package[$::statistics::type_of_probs],
   }
 
-  create_resources('statistics::collectd::plugin', $::statistics::collectd_plugins)
+  create_resources('statistics::probes::collectd::plugin', $::statistics::collectd_plugins)
 
   service { 'collectd':
      enable  => true,

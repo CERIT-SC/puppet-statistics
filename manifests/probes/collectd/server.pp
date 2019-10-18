@@ -1,4 +1,4 @@
-class statistics::collectd::server {
+class statistics::probes::collectd::server {
   $_data_for_template = {
                           "databases"               => $::statistics::databases,
                           "influxdb_port"           => $::statistics::influx_port,
@@ -22,7 +22,7 @@ class statistics::collectd::server {
     require => Package[$::statistics::type_of_probs],
   }
 
-  create_resources('statistics::collectd::plugin', $::statistics::collectd_plugins)
+  create_resources('statistics::probes::collectd::plugin', $::statistics::collectd_plugins)
 
   if ("prometheus2" in $::statistics::databases) {
      package { 'collectd_exporter':

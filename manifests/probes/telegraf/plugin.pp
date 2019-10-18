@@ -1,4 +1,4 @@
-define statistics::telegraf::plugin (
+define statistics::probes::telegraf::plugin (
   Hash    $settings = {},
   Boolean $empty    = true,
 ) {

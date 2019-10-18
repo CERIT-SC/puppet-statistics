@@ -1,13 +1,13 @@
-<%- | String  $name,
+<%- | String  $type,
       Integer $interval = 300,
-      Hash    $options = {},
+      Hash    $options  = {},
 | -%>
-<LoadPlugin <%= $name %>>
+<LoadPlugin <%= $type %>>
    Interval <%= $interval %>
 </LoadPlugin>
 
-<Plugin <%= $name %>>
+<Plugin <%= $type %>>
   <% $options.each |$key, $value| { -%>
-     <%= $key %> = <%= $value %>
+     <%= $key %> <%= $value %>
   <% } -%>
-  </Plugin>
+</Plugin>

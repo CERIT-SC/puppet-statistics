@@ -1,10 +1,10 @@
 class statistics::role::server
 {
   if "collectd" in $::statistics::type_of_probes {
-     include statistics::collectd::server
+     include statistics::probes::collectd::server
   }
   if "telegraf" in $::statistics::type_of_probes {
-     include statistics::telegraf::server
+     include statistics::probes::telegraf::server
   }
 
   ###### SET UP GRAFANA
