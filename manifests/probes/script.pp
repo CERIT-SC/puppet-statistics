@@ -3,10 +3,10 @@ define statistics::probes::script (
   String                   $type_of_probe         = 'telegraf',
   Hash                     $parameters_for_plugin = {},
   Variant[Integer, String] $interval_collectd     = 300,
-  Pattern                  $regex                 = ".*", 
+  Pattern                  $node                  = ".*", 
 ) {
 
-  if $facts['fqdn'] =~ $regex {
+  if $facts['fqdn'] =~ $node {
 
       package { $name_of_package:
          ensure => "present",
