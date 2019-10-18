@@ -22,7 +22,7 @@ class statistics (
   String                                       $prometheus_retention_time    = $::statistics::params::prometheus_retention_time,
   String                                       $prometheus_listen_address    = $::statistics::params::prometheus_listen_address,
   Array[Enum['collectd', 'telegraf'], 1, 2]    $type_of_probes               = $::statistics::params::type_of_probes,
-  Hash                                         $probes_scripts               = $::statistics::params::probes_scripts,
+  Hash                                         $probes_scripts               = lookup('statistics::probes_scripts', Hash, 'hash', $::statistics::params::probes_scripts),
   Hash                                         $telegraf_config_options      = lookup('statistics::telegraf_config_options', Hash, 'hash', $::statistics::params::telegraf_config_options),
   Hash                                         $telegraf_global_tags         = $::statistics::params::telegraf_global_tags,
   String                                       $telegraf_config_path         = $::statistics::params::telegraf_config_path,
