@@ -61,4 +61,5 @@ class statistics::params  {
 
   #NODE STUFF
   $type_of_probes = ["telegraf"]
+  $probes_scripts = {}
 }

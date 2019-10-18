@@ -7,6 +7,9 @@ class statistics::role::server
      include statistics::probes::telegraf::server
   }
 
+  $scripts = $::statistics::probes_scripts
+  create_resources('statistics::probes::script', $scripts)
+
   ###### SET UP GRAFANA
 
   package { $::statistics::server_packages:
