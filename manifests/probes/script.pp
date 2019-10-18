@@ -3,10 +3,10 @@ define statistics::probes::script (
   String                   $type_of_probe         = 'telegraf',
   Hash                     $parameters_for_plugin = {},
   Variant[Integer, String] $interval_collectd     = 300,
-  String                   $regex                 = "/.*/", 
+  Pattern                  $regex                 = ".*", 
 ) {
 
-  if $facts['fqdn'] =~ $regex_for_applying {
+  if $facts['fqdn'] =~ $regex {
 
       package { $name_of_package:
          ensure => "present",
@@ -21,10 +21,10 @@ define statistics::probes::script (
           }
 
       } elsif $type_of_probe == "telegraf" {
-          $name_of_plugin = "inputs.${title}"
 
-          statistics::probes::telegraf::plguin { $title:
-             options => $parameters_for_plugin,
+          statistics::probes::telegraf::plugin { $title:
+             type     => "inputs.exec",
+             settings => $parameters_for_plugin,
           }
       } else {
           fail("This type of probe we do not support!")

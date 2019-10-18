@@ -1,4 +1,4 @@
-<%- | String  $name,
+<%- | String  $type,
       Hash    $options = {},
 | -%>
 [[<%= $name %>]]
