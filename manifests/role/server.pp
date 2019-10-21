@@ -91,11 +91,22 @@ class statistics::role::server
           
           $flags_for_service = ""
           $storage = $::statistics::influx_storage
+
+          $parameters_for_config = {
+                                      "storage"                            => $storage,
+                                      "influx_listening_port_for_collectd" => $::statistics::influx_port,
+                                      "database_name_for_collectd"         => $::statistics::influx_collectd_database_name,
+                                      "bind_address"                       => $::statistics::influx_bind_address,
+                                      "auth_enabled"                       => $::statistics::influx_auth_enabled,
+                                      "https"                              => $::statistics::influx_https,
+                                      "https-certificate"                  => $::statistics::influx_path_to_cert,
+                                      "https-private-key"                  => $::statistics::influx_path_to_priv_key,
+                                   }
           
           file { 'config for influxdb':
             ensure  => 'present',
             path    => '/etc/influxdb/influxdb.conf',
-            content => epp('statistics/influxdb_config.epp', { "storage" => $storage, "influx_listening_port_for_collectd" => $::statistics::influx_port, "database_name" => $::statistics::influx_database_name, "bind_address" => $::statistics::influx_bind_address, "auth_enabled" => $::statistics::influx_auth_enabled }),
+            content => epp('statistics/influxdb_config.epp', $parameters_for_config),
             require => Package[$databases],
             notify  => Service['influxdb'],
           }

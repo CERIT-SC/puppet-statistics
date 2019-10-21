@@ -1,8 +1,11 @@
-<%- | String  $storage                            = "/var/lib/influxdb",
-      Integer $influx_listening_port_for_collectd = 25800,
-      String  $database_name                      = "collectd",
-      String  $bind_address                       = "127.0.0.1:8086",
-      Boolean $auth_enabled                       = false,
+<%- | String            $storage                            = "/var/lib/influxdb",
+      Integer           $influx_listening_port_for_collectd = 25800,
+      String            $database_name_for_collectd         = "collectd",
+      String            $bind_address                       = "127.0.0.1:8086",
+      Boolean           $auth_enabled                       = false,
+      Boolean           $https                              = false,
+      Optional[String]  $https-certificate,
+      Optional[String]  $https-private-key,
 | -%>
 
 [meta]
@@ -25,3 +28,8 @@
 [http]
    bind-address = "<%= $bind_address %>"
    auth-enabled = <%= $auth_enabled %>
+   <% if $https == true { -%>
+   https-enabled     = true
+   https-certificate = "<%= $https-certificate %>"
+   https-private-key = "<%= $https-private-key %>"
+   <% } -%>
