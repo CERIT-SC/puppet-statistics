@@ -37,30 +37,31 @@ class statistics::params  {
   $database_for_telegraf        = "telegraf"
   
   # SERVER STUFF
-  $server_packages               = ['grafana']
-  $server                        = false
-  $collectd_exp_port             = 9110
-  $databases                     = ["prometheus2"]
-  $grafana_web_protocol          = "http"
-  $grafana_dashboards            = {}
-  $grafana_url                   = "http://127.0.0.1"
-  $grafana_apikey                = "SECRET KEY"
-  $grafana_plugins               = []
-  $database_path_cert_file       = undef
-  $database_path_cert_key        = undef
-  $influx_port                   = 25800
-  $influx_storage                = "/var/lib/influxdb/"
-  $influx_collectd_database_name = "collectd"
-  $influx_bind_address           = "127.0.0.1:8086"
-  $influx_auth_enabled           = false
-  $influx_auth_username          = "admin"
-  $influx_auth_password          = "admin"
-  $influx_https                  = false
-  $influx_path_to_cert           = undef
-  $influx_path_to_priv_key       = undef
-  $prometheus_storage            = "/var/lib/prometheus/data"
-  $prometheus_retention_time     = "15d"
-  $prometheus_listen_address     = "127.0.0.1:9090"
+  $certs_generated_by_lets_encrypt = false
+  $server_packages                 = ['grafana']
+  $server                          = false
+  $collectd_exp_port               = 9110
+  $databases                       = ["prometheus2"]
+  $grafana_web_protocol            = "http"
+  $grafana_dashboards              = {}
+  $grafana_url                     = "http://127.0.0.1"
+  $grafana_apikey                  = "SECRET KEY"
+  $grafana_plugins                 = []
+  $database_path_cert_file         = undef
+  $database_path_cert_key          = undef
+  $influx_port                     = 25800
+  $influx_storage                  = "/var/lib/influxdb/"
+  $influx_collectd_database_name   = "collectd"
+  $influx_bind_address             = "127.0.0.1:8086"
+  $influx_auth_enabled             = false
+  $influx_auth_username            = "admin"
+  $influx_auth_password            = "admin"
+  $influx_https                    = false
+  $influx_path_to_cert             = undef
+  $influx_path_to_priv_key         = undef
+  $prometheus_storage              = "/var/lib/prometheus/data"
+  $prometheus_retention_time       = "15d"
+  $prometheus_listen_address       = "127.0.0.1:9090"
 
   #NODE STUFF
   $type_of_probes = ["telegraf"]

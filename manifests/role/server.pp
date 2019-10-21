@@ -10,6 +10,21 @@ class statistics::role::server
   $scripts = $::statistics::probes_scripts
   create_resources('statistics::probes::script', $scripts)
 
+  ###### SET UP LETS ENCRYPT
+
+  if $::statistics::certs_generated_by_lets_encrypt == true {
+    class { letsencrypt:
+       email => 'root@cerit-sc.cz',
+    }
+    
+    letsencrypt::certonly { $facts['fqdn']: 
+       manage_cron => true,
+       before      => 'grafana config',
+    }
+
+    # TODO SET PRIVILEGES TO CERT FILE FOR GRAFANA AND MAYBE FOR INFLUXDB
+  }
+
   ###### SET UP GRAFANA
 
   package { $::statistics::server_packages:
@@ -99,8 +114,8 @@ class statistics::role::server
                                       "bind_address"                       => $::statistics::influx_bind_address,
                                       "auth_enabled"                       => $::statistics::influx_auth_enabled,
                                       "https"                              => $::statistics::influx_https,
-                                      "https-certificate"                  => $::statistics::influx_path_to_cert,
-                                      "https-private-key"                  => $::statistics::influx_path_to_priv_key,
+                                      "https_certificate"                  => $::statistics::influx_path_to_cert,
+                                      "https_private_key"                  => $::statistics::influx_path_to_priv_key,
                                    }
           
           file { 'config for influxdb':
@@ -127,11 +142,16 @@ class statistics::role::server
 
           if $::statistics::influx_auth_enabled == true {
 
-              $username = $::statistics::influx_auth_username
-              $password = $::statistics::influx_auth_password
+              $command_options = $::statistics::influx_https ? {
+                 true    => "-ssl -host ${facts['fqdn']}",
+                 default => "",
+              }
+
+              $username        = $::statistics::influx_auth_username
+              $password        = $::statistics::influx_auth_password
 
               exec { 'create admin account in influxdb':
-                 command => "/usr/bin/influx -username ${username} -password ${password} --execute \"CREATE USER ${username} WITH PASSWORD \'${password}\' WITH ALL PRIVILEGES\"",
+                 command => "/usr/bin/influx ${command_options} -username ${username} -password ${password} --execute \"CREATE USER ${username} WITH PASSWORD \'${password}\' WITH ALL PRIVILEGES\"",
                  subscribe   => Service['influxdb'],
                  require     => Package[$databases],
                  refreshonly => true,
