@@ -6,7 +6,9 @@
       Boolean           $https                              = false,
       Optional[String]  $https_certificate,
       Optional[String]  $https_private_key,
+      Optional[Hash]    $additional_configuration,
 | -%>
+<% include stdlib %>
 
 [meta]
   # Where the metadata/raft database is stored
@@ -33,3 +35,13 @@
    https-certificate = "<%= $https_certificate %>"
    https-private-key = "<%= $https_private_key %>"
    <% } -%>
+
+<% unless $additional_configuration =~ Undef { -%>
+<%- $additional_configuration.each |$section, $hash| { -%>
+[<%= $section %>]
+<%- $hash.each |$entry, $value| { -%>
+    <%= $entry %> = "<%= $value %>"
+<% } -%>
+
+<% } -%>
+<% } -%>

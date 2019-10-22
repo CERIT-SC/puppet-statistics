@@ -116,6 +116,7 @@ class statistics::role::server
                                       "https"                              => $::statistics::influx_https,
                                       "https_certificate"                  => $::statistics::influx_path_to_cert,
                                       "https_private_key"                  => $::statistics::influx_path_to_priv_key,
+                                      "additional_configuration"           => $::statistics::influx_additional_configuration,
                                    }
           
           file { 'config for influxdb':
