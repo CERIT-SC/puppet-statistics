@@ -105,7 +105,11 @@ class statistics::role::server
       } elsif $database == "influxdb" {
           
           $flags_for_service = ""
-          $storage = $::statistics::influx_storage
+          if $::statistics::influx_additional_configuration =~ Undef or $::statistics::influx_additional_configuration["meta"] =~ Undef or $::statistics::influx_additional_configuration["meta"]["dir"] =~ Undef {
+            $storage = $::statistics::influx_storage
+          } else {
+            $storage = $::statistics::influx_additional_configuration["meta"]["dir"]
+          }
 
           $parameters_for_config = {
                                       "storage"                            => $storage,
