@@ -11,23 +11,67 @@
 <% include stdlib %>
 
 [meta]
+<% if $additional_configuration =~ Undef or $additional_configuration["meta"] =~ Undef or $additional_configuration["meta"]["dir"] =~ Undef { -%>
   # Where the metadata/raft database is stored
   dir = "<%= $storage %>/meta"
+<% } -%>
+<% unless $additional_configuration =~ Undef or $additional_configuration["meta"] =~ Undef { -%>
+<%     $additional_configuration["meta"].each |$entry, $value| { -%>
+   <%= $entry %> = "<%= $value %>"
+<%     } -%>
+<% } -%>
 
 [data]
+<% if $additional_configuration =~ Undef or $additional_configuration["data"] =~ Undef or $additional_configuration["data"]["dir"] =~ Undef { -%>
   # The directory where the TSM storage engine stores TSM files.
+<%     if $additional_configuration =~ Undef or $additional_configuration["meta"] =~ Undef or $additional_configuration["meta"]["dir"] =~ Undef { -%>
   dir = "<%= $storage %>/data"
-
+<%     } else { -%>
+  dir = "<%= $additional_configuration["meta"]["dir"] -%>/data"
+<%     } -%>
+<% } -%>
+<% if $additional_configuration =~ Undef or $additional_configuration["data"] =~ Undef or $additional_configuration["data"]["wal-dir"] =~ Undef { -%>
   # The directory where the TSM storage engine stores WAL files.
+<%     if $additional_configuration =~ Undef or $additional_configuration["meta"] =~ Undef or $additional_configuration["meta"]["dir"] =~ Undef { -%>
   wal-dir = "<%= $storage %>/wal"
+<%     } else { -%>
+  wal-dir = "<%= $additional_configuration["meta"]["dir"] -%>/wal"
+<%     } -%>
+<% } -%>
+<% unless $additional_configuration =~ Undef or $additional_configuration["data"] =~ Undef { -%>
+<%     $additional_configuration["data"].each |$entry, $value| { -%>
+   <%= $entry %> = "<%= $value %>"
+<%     } -%>
+<% } -%>
 
 [[collectd]]
+<% if $additional_configuration =~ Undef or $additional_configuration["[collectd]"] =~ Undef { -%>
    enabled = true
    bind-address = ":<%= $influx_listening_port_for_collectd %>"
    database = "<%= $database_name_for_collectd %>"
    typesdb = "/usr/share/collectd/types.db" 
+<% } else { -%>
+<%     if $additional_configuration["[collectd]"]["enabled"] =~ Undef { -%>
+   enabled = true
+<%     } -%>
+<%     if $additional_configuration["[collectd]"]["bind-address"] =~ Undef { -%>
+   bind-address = ":<%= $influx_listening_port_for_collectd %>"
+<%     } -%>
+<%     if $additional_configuration["[collectd]"]["database"] =~ Undef { -%>
+   database = "<%= $database_name_for_collectd %>"
+<%     } -%>
+<%     if $additional_configuration["[collectd]"]["typesdb"] =~ Undef { -%>
+   typesdb = "/usr/share/collectd/types.db" 
+<%     } -%>
+<% } -%>
+<% unless $additional_configuration =~ Undef or $additional_configuration["[collectd]"] =~ Undef { -%>
+<%     $additional_configuration["[collectd]"].each |$entry, $value| { -%>
+   <%= $entry %> = "<%= $value %>"
+<%     } -%>
+<% } -%>
 
 [http]
+<% if $additional_configuration =~ Undef or $additional_configuration["http"] =~ Undef { -%>
    bind-address = "<%= $bind_address %>"
    auth-enabled = <%= $auth_enabled %>
    <% if $https == true { -%>
@@ -35,13 +79,37 @@
    https-certificate = "<%= $https_certificate %>"
    https-private-key = "<%= $https_private_key %>"
    <% } -%>
+<% } else { -%>
+<%     if $additional_configuration["http"]["bind-address"] =~ Undef { -%>
+   bind-address = "<%= $bind_address %>"
+<%     } -%>
+<%     if $additional_configuration["http"]["auth-enabled"] =~ Undef { -%>
+   auth-enabled = <%= $auth_enabled %>
+<%     } -%>
+<%     if $additional_configuration["http"]["https-enabled"] =~ Undef and $https == true { -%>
+   https-enabled     = true
+<%     } -%>
+<%     if $additional_configuration["http"]["https-certificate"] =~ Undef and $https == true { -%>
+   https-certificate = "<%= $https_certificate %>"
+<%     } -%>
+<%     if $additional_configuration["http"]["https-private-key"] =~ Undef and $https == true { -%>
+   https-private-key = "<%= $https_private_key %>"
+<%     } -%>
+<% } -%>
+<% unless $additional_configuration =~ Undef or $additional_configuration["http"] =~ Undef { -%>
+<%     $additional_configuration["http"].each |$entry, $value| { -%>
+   <%= $entry %> = "<%= $value %>"
+<%     } -%>
+<% } -%>
 
 <% unless $additional_configuration =~ Undef { -%>
-<%- $additional_configuration.each |$section, $hash| { -%>
+<%     $additional_configuration.each |$section, $hash| { -%>
+<%         if $section != "meta" and $section != "data" and $section != "[collectd]" and $section != "http" { -%>
 [<%= $section %>]
-<%- $hash.each |$entry, $value| { -%>
-    <%= $entry %> = "<%= $value %>"
-<% } -%>
+<%             $hash.each |$entry, $value| { -%>
+   <%= $entry %> = "<%= $value %>"
+<%             } -%>
 
-<% } -%>
+<%         } -%>
+<%     } -%>
 <% } -%>
