@@ -73,11 +73,11 @@
 <% if $additional_configuration =~ Undef or $additional_configuration["http"] =~ Undef { -%>
   bind-address = "<%= $bind_address %>"
   auth-enabled = <%= $auth_enabled %>
-  <% if $https == true { -%>
+<%     if $https == true { -%>
   https-enabled     = true
   https-certificate = "<%= $https_certificate %>"
   https-private-key = "<%= $https_private_key %>"
-  <% } -%>
+<%     } -%>
 <% } else { -%>
 <%     if $additional_configuration["http"]["bind-address"] =~ Undef { -%>
   bind-address = "<%= $bind_address %>"
