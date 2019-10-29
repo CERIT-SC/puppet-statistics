@@ -28,7 +28,7 @@ class statistics::databse::influxdb
     ensure  => 'present',
     path    => '/etc/influxdb/influxdb.conf',
     content => epp('statistics/influxdb_config.epp', $parameters_for_config),
-    require => Package[$databases],
+    require => Package[$::statistics::databases],
     notify  => Service['influxdb'],
   }
 
@@ -57,7 +57,7 @@ class statistics::databse::influxdb
     exec { 'create admin account in influxdb':
       command => "/usr/bin/influx ${command_options} -username ${username} -password ${password} --execute \"CREATE USER ${username} WITH PASSWORD \'${password}\' WITH ALL PRIVILEGES\"",
       subscribe   => Service['influxdb'],
-      require     => Package[$databases],
+      require     => Package[$::statistics::databases],
       refreshonly => true,
     }
   }
