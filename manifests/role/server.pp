@@ -1,5 +1,7 @@
 class statistics::role::server
 {
+  ###### INCLUDE ALL PROBES
+
   if "collectd" in $::statistics::type_of_probes {
      include statistics::probes::collectd::server
   }
@@ -14,157 +16,72 @@ class statistics::role::server
 
   if $::statistics::certs_generated_by_lets_encrypt == true {
     class { letsencrypt:
-       email => 'root@cerit-sc.cz',
+       email  => 'root@cerit-sc.cz',
+       before => File['grafana config'],
     }
-    
+        
     letsencrypt::certonly { $facts['fqdn']: 
        manage_cron => true,
-       before      => 'grafana config',
+       before      => File['grafana config'],
     }
 
-    # TODO SET PRIVILEGES TO CERT FILE FOR GRAFANA AND MAYBE FOR INFLUXDB
+    if "influxdb" in $::statistics::databases {
+      $members_of_group = ["influxdb", "grafana"]
+      $before           = [ Package[$::statistics::server_packages], Package[$::statistics::databases] ]
+    } else {
+      $members_of_group = ["grafana"]
+      $before          = Package[$::statistics::server_packages]
+    }
+
+    group { 'accessToLetsEncryptCerts':
+        ensure  => 'present',
+        before  => $before,
+    }
+        
+    $members_of_group.each |$member| {
+        user { $member:
+           ensure  => "present",
+           groups  => [$member, "accessToLetsEncryptCerts"],
+           require => Group['accessToLetsEncryptCerts'],
+        }   
+    }
+
+    exec { 'chown certs':
+       command => "/bin/chown -R grafana:accessToLetsEncryptCerts /etc/letsencrypt/archive}",
+       unless  => "/usr/bin/stat -c \"%G\" /etc/letsencrypt/archive/${facts['fqdn']} | grep accessToLetsEncryptCerts",
+       require => [ Group['accessToLetsEncryptCerts'], Letsencrypt::Certonly[$facts['fqdn']] ],
+    }
+
+    exec { 'chmod priv cert':
+       command => "/bin/chmod 0640 /etc/letsencrypt/archive/${facts['fqdn']}/privkey1.pem",
+       unless  => "/usr/bin/stat -c \"%a\" /etc/letsencrypt/archive/${facts['fqdn']}/privkey1.pem | grep 640",
+       require => [ Group['accessToLetsEncryptCerts'], Letsencrypt::Certonly[$facts['fqdn']] ],
+    }   
+    
+    $require = [ Exec['chown certs'], Exec['chmod priv cert'] ]
+  } else {
+    $require = []
   }
 
   ###### SET UP GRAFANA
 
-  package { $::statistics::server_packages:
-    ensure => "present",
-  }
+  include statistics::grafana::install
 
-  file { 'grafana config':
-    ensure  => 'present',
-    path    => '/etc/grafana/grafana.ini',
-    content => epp('statistics/grafana_config.epp', { "protocol" => $::statistics::grafana_web_protocol, "path_to_cert_file" => $::statistics::database_path_cert_file, "path_to_cert_key" => $::statistics::database_path_cert_key }), 
-    require => Package[$::statistics::server_packages],
-  }
-
-
-  service { 'grafana-server':
-    enable  => true,
-    ensure  => 'running',
-    require => File['grafana config'],
-  }
-
-  $::statistics::grafana_dashboards.each |$name_of_dashboard, $dashboard| {
-      statistics::grafana::dashboard { $name_of_dashboard:
-          apikey  => $::statistics::grafana_apikey,
-          url     => $::statistics::grafana_url,
-          options => $dashboard['options'],
-      }
-  }
-  
-  $::statistics::grafana_plugins.each |$plugin| {
-      statistics::grafana::plugin { $plugin: }
-  }
-
-  
   ####### SET UP DATABASES
 
   $databases = $::statistics::databases
 
   package { $databases:
-   ensure => "present",
+    ensure => "present",
   }
 
   unique($databases).each |$database| { # filter duplicities
-
-      if $database == "prometheus2" {
-          
-          $flags_for_service = "--config.file /etc/prometheus/prometheus.yml --storage.tsdb.path ${::statistics::prometheus_storage} --storage.tsdb.retention.time ${::statistics::prometheus_retention_time} --web.listen-address ${::statistics::prometheus_listen_address}"
-     
-          file { 'config for prometheus2':
-            ensure  => 'present',
-            path    => '/etc/prometheus/prometheus.yml',
-            content => epp('statistics/prometheus_config.epp'),
-            require => Package[$databases],
-            notify  => Service['prometheus'],
-          }
-     
-          $storage = $::statistics::prometheus_storage
-    
-          file { $storage:
-            ensure => directory,
-            group  => "prometheus",
-            owner  => "prometheus",
-            mode   => "0755",
-          }
-          
-          file { 'parameters for service': 
-            path    => '/etc/default/prometheus',
-            content => "PROMETHEUS_OPTS=\'${flags_for_service}\'",
-            ensure  => 'present',
-            mode    => "0644", 
-          }
-          
-          service { "prometheus":
-            enable  => true,
-            ensure  => 'running',
-            require => [ File['parameters for service'], File[$storage], File["config for ${database}"] ],
-          }
-    
-      } elsif $database == "influxdb" {
-          
-          $flags_for_service = ""
-          if $::statistics::influx_additional_configuration =~ Undef or $::statistics::influx_additional_configuration["meta"] =~ Undef or $::statistics::influx_additional_configuration["meta"]["dir"] =~ Undef {
-            $storage = $::statistics::influx_storage
-          } else {
-            $storage = $::statistics::influx_additional_configuration["meta"]["dir"]
-          }
-
-          $parameters_for_config = {
-                                      "storage"                            => $storage,
-                                      "influx_listening_port_for_collectd" => $::statistics::influx_port,
-                                      "database_name_for_collectd"         => $::statistics::influx_collectd_database_name,
-                                      "bind_address"                       => $::statistics::influx_bind_address,
-                                      "auth_enabled"                       => $::statistics::influx_auth_enabled,
-                                      "https"                              => $::statistics::influx_https,
-                                      "https_certificate"                  => $::statistics::influx_path_to_cert,
-                                      "https_private_key"                  => $::statistics::influx_path_to_priv_key,
-                                      "additional_configuration"           => $::statistics::influx_additional_configuration,
-                                   }
-          
-          file { 'config for influxdb':
-            ensure  => 'present',
-            path    => '/etc/influxdb/influxdb.conf',
-            content => epp('statistics/influxdb_config.epp', $parameters_for_config),
-            require => Package[$databases],
-            notify  => Service['influxdb'],
-          }
-    
-          file{ $storage:
-            ensure  =>  directory,
-            group   => "influxdb",
-            owner   => "influxdb",
-            mode    =>  "0755",
-          }
-    
-          service { "influxdb":
-            enable  => true,
-            ensure  => 'running',
-            flags   => $flags_for_service,
-            require => [ File[$storage], File["config for influxdb"] ],
-          }
-
-          if $::statistics::influx_auth_enabled == true {
-
-              $command_options = $::statistics::influx_https ? {
-                 true    => "-ssl -host ${facts['fqdn']}",
-                 default => "",
-              }
-
-              $username        = $::statistics::influx_auth_username
-              $password        = $::statistics::influx_auth_password
-
-              exec { 'create admin account in influxdb':
-                 command => "/usr/bin/influx ${command_options} -username ${username} -password ${password} --execute \"CREATE USER ${username} WITH PASSWORD \'${password}\' WITH ALL PRIVILEGES\"",
-                 subscribe   => Service['influxdb'],
-                 require     => Package[$databases],
-                 refreshonly => true,
-              }
-          }
-    
-      } else {
-          fail("Use only influxdb or prometheus2 as database")
-      }
+    if $database == "prometheus2" {
+      include statistics::database::prometheus2    
+    } elsif $database == "influxdb" {
+      include statistics::database::influxdb
+    } else {
+      fail("Use only influxdb or prometheus2 as database")
+    }
   }
 }
