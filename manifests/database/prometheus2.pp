@@ -5,7 +5,7 @@ class statistics::database::prometheus2 {
     ensure  => 'present',
     path    => '/etc/prometheus/prometheus.yml',
     content => epp('statistics/prometheus_config.epp'),
-    require => Package[$databases],
+    require => Package[$::statistics::databases],
     notify  => Service['prometheus'],
   }
    
@@ -28,6 +28,6 @@ class statistics::database::prometheus2 {
   service { "prometheus":
     enable  => true,
     ensure  => 'running',
-    require => [ File['parameters for service'], File[$storage], File["config for ${database}"] ],
+    require => [ File['parameters for service'], File[$storage], File["config for prometheus2"] ],
   }
 }
