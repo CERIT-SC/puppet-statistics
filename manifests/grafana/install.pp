@@ -10,11 +10,16 @@ class statistics::grafana::install {
     require => Package[$::statistics::server_packages],
   }
 
+  if  $::statistics::certs_generated_by_lets_encrypt == true {
+    $require = [ Exec['chown certs'], Exec['chmod priv cert'] ]
+  } else {
+    $require = []
+  }
 
   service { 'grafana-server':
     enable  => true,
     ensure  => 'running',
-    require => File['grafana config'] + $require,
+    require => [File['grafana config']] + $require,
   }
 
   $::statistics::grafana_dashboards.each |$name_of_dashboard, $dashboard| {
