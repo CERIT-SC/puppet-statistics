@@ -1,4 +1,4 @@
-class statistics::databse::influxdb
+class statistics::database::influxdb
 {
   if $::statistics::influx_additional_configuration =~ Undef or $::statistics::influx_additional_configuration["meta"] =~ Undef or $::statistics::influx_additional_configuration["meta"]["dir"] =~ Undef {
     $storage = $::statistics::influx_storage
