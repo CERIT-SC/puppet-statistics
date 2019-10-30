@@ -53,8 +53,8 @@ class statistics::role::server
     }
 
     exec { 'chmod priv cert':
-       command => "/bin/chmod 0640 /etc/letsencrypt/archive/${facts['fqdn']}/privkey1.pem",
-       unless  => "/usr/bin/stat -c \"%a\" /etc/letsencrypt/archive/${facts['fqdn']}/privkey1.pem | grep 640",
+       command => "/bin/chmod -R u+rwX,g+rX /etc/letsencrypt/archive",
+       unless  => "/usr/bin/stat -c \"%a\" /etc/letsencrypt/archive | grep 750",
        require => [ Group['accessToLetsEncryptCerts'], Letsencrypt::Certonly[$facts['fqdn']] ],
     }   
   }
