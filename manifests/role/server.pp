@@ -57,10 +57,6 @@ class statistics::role::server
        unless  => "/usr/bin/stat -c \"%a\" /etc/letsencrypt/archive/${facts['fqdn']}/privkey1.pem | grep 640",
        require => [ Group['accessToLetsEncryptCerts'], Letsencrypt::Certonly[$facts['fqdn']] ],
     }   
-    
-    $require = [ Exec['chown certs'], Exec['chmod priv cert'] ]
-  } else {
-    $require = []
   }
 
   ###### SET UP GRAFANA
