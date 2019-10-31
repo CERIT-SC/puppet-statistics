@@ -27,17 +27,13 @@ class statistics (
   String                                       $prometheus_storage              = $::statistics::params::prometheus_storage,
   String                                       $prometheus_retention_time       = $::statistics::params::prometheus_retention_time,
   String                                       $prometheus_listen_address       = $::statistics::params::prometheus_listen_address,
-  Array[Enum['collectd', 'telegraf'], 1, 2]    $type_of_probes                  = $::statistics::params::type_of_probes,
-  Hash                                         $probes_scripts                  = lookup('statistics::probes_scripts', Hash, 'hash', $::statistics::params::probes_scripts),
-  Hash                                         $telegraf_config_options         = lookup('statistics::telegraf_config_options', Hash, 'hash', $::statistics::params::telegraf_config_options),
+  Array[Enum['collectd', 'telegraf'], 1, 2]    $type_of_probes                  = $::statistics::params::type_of_probes,                  
   Hash                                         $telegraf_global_tags            = $::statistics::params::telegraf_global_tags,
   String                                       $telegraf_config_path            = $::statistics::params::telegraf_config_path,
-  String                                       $telegraf_path_to_plugins        = $::statistics::params::telegraf_path_to_plugins,
-  Hash                                         $telegraf_plugins                = lookup('statistics::telegraf_plugins', Hash, 'hash', $::statistics::params::telegraf_plugins),
+  String                                       $telegraf_path_to_plugins        = $::statistics::params::telegraf_path_to_plugins,        
   Array[String]                                $telegraf_urls                   = $::statistics::params::telegraf_urls,
   String                                       $database_for_telegraf           = $::statistics::params::database_for_telegraf,
   Integer                                      $telegraf_metric_buffer_limit    = $::statistics::params::telegraf_metric_buffer_limit,
-  Hash                                         $collectd_plugins                = lookup('statistics::collectd_plugins', Hash, 'hash', $::statistics::params::collectd_plugins),
   Integer                                      $collectd_listen_port            = $::statistics::params::collectd_listen_port,
   Integer                                      $collectd_exp_port               = $::statistics::params::collectd_exp_port,
   String                                       $collectd_username               = $::statistics::params::collectd_username,
@@ -49,6 +45,11 @@ class statistics (
   }
   
   contain statistics::install
+  
+  $telegraf_plugins        = lookup('statistics::telegraf_plugins', Hash, 'hash', $::statistics::params::telegraf_plugins)
+  $collectd_plugins        = lookup('statistics::collectd_plugins', Hash, 'hash', $::statistics::params::collectd_plugins)
+  $telegraf_config_options = lookup('statistics::telegraf_config_options', Hash, 'hash', $::statistics::params::telegraf_config_options)
+  $probes_scripts          = lookup('statistics::probes_scripts', Hash, 'hash', $::statistics::params::probes_scripts)
   
   if ($server == true) {
     include statistics::role::server
