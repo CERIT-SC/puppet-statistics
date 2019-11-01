@@ -22,7 +22,7 @@ class statistics (
   Boolean                                      $influx_https                    = $::statistics::params::influx_https,
   Optional[String]                             $influx_path_to_priv_key         = $::statistics::params::influx_path_to_priv_key,
   Optional[String]                             $influx_path_to_cert             = $::statistics::params::influx_path_to_cert,
-  Optional[Hash]                               $influx_additional_configuration = {},
+  Hash                                         $influx_additional_configuration = $::statistics::params::influx_additional_configuration,
   Boolean                                      $certs_generated_by_lets_encrypt = $::statistics::params::certs_generated_by_lets_encrypt,
   String                                       $prometheus_storage              = $::statistics::params::prometheus_storage,
   String                                       $prometheus_retention_time       = $::statistics::params::prometheus_retention_time,
