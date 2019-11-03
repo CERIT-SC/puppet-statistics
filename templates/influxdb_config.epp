@@ -16,7 +16,7 @@
 <% } -%>
 <% unless $additional_configuration =~ Undef or $additional_configuration["meta"] =~ Undef { -%>
 <%     $additional_configuration["meta"].each |$entry, $value| { -%>
-  <%= $entry %> = "<%= $value %>"
+  <%= $entry %> = <%= $value %>
 <%     } -%>
 <% } -%>
 
@@ -39,7 +39,7 @@
 <% } -%>
 <% unless $additional_configuration =~ Undef or $additional_configuration["data"] =~ Undef { -%>
 <%     $additional_configuration["data"].each |$entry, $value| { -%>
-  <%= $entry %> = "<%= $value %>"
+  <%= $entry %> = <%= $value %>
 <%     } -%>
 <% } -%>
 
@@ -65,7 +65,7 @@
 <% } -%>
 <% unless $additional_configuration =~ Undef or $additional_configuration["[collectd]"] =~ Undef { -%>
 <%     $additional_configuration["[collectd]"].each |$entry, $value| { -%>
-  <%= $entry %> = "<%= $value %>"
+  <%= $entry %> = <%= $value %>
 <%     } -%>
 <% } -%>
 
@@ -97,7 +97,7 @@
 <% } -%>
 <% unless $additional_configuration =~ Undef or $additional_configuration["http"] =~ Undef { -%>
 <%     $additional_configuration["http"].each |$entry, $value| { -%>
-  <%= $entry %> = "<%= $value %>"
+  <%= $entry %> = <%= $value %>
 <%     } -%>
 <% } -%>
 
@@ -106,7 +106,7 @@
 <%         if $section != "meta" and $section != "data" and $section != "[collectd]" and $section != "http" { -%>
 [<%= $section %>]
 <%             $hash.each |$entry, $value| { -%>
-  <%= $entry %> = "<%= $value %>"
+  <%= $entry %> = <%= $value %>
 <%             } -%>
 
 <%         } -%>
