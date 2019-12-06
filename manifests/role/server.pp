@@ -87,6 +87,8 @@ class statistics::role::server
 
       file { $::statistics::backup_influxdb_path:
         ensure => "directory",
+        owner  => "influxdb",
+        group  => "influxdb",
       }
 
       cron { 'backup_influxdb':
