@@ -80,4 +80,18 @@ class statistics::role::server
       fail("Use only influxdb or prometheus2 as database")
     }
   }
+  
+  ### SET UP BACKUP OF INFLUXDB
+  
+  if $::statistics::backup_influxdb == true {
+
+      file { $::statistics::backup_influxdb_path:
+        ensure => "directory",
+      }
+
+      cron { 'backup_influxdb':
+        command => "/usr/bin/influxd backup -database ${::statistics::backup_influxdb_db_name} ${::statistics::backup_influxdb_path}",
+        hour    => '23',
+      }
+  }
 }

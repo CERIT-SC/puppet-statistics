@@ -60,6 +60,9 @@ class statistics::params  {
   $influx_path_to_cert             = undef
   $influx_path_to_priv_key         = undef
   $influx_additional_configuration = {}
+  $backup_influxdb                 = false
+  $backup_influxdb_db_name         = "telegraf"
+  $backup_influxdb_path            = "/"
   $prometheus_storage              = "/var/lib/prometheus/data"
   $prometheus_retention_time       = "15d"
   $prometheus_listen_address       = "127.0.0.1:9090"
