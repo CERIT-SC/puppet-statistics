@@ -92,7 +92,7 @@ class statistics::role::server
       }
 
       cron { 'backup_influxdb':
-        command => "/usr/bin/influxd backup -database ${::statistics::backup_influxdb_db_name} ${::statistics::backup_influxdb_path}",
+        command => "/usr/bin/influxd backup -database ${::statistics::backup_influxdb_db_name} ${::statistics::backup_influxdb_path} > /dev/null",
         hour    => '23',
         minute  => '0',
       }
