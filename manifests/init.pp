@@ -10,8 +10,8 @@ class statistics (
   String                                       $grafana_url                     = $::statistics::params::grafana_url,
   String                                       $grafana_apikey                  = $::statistics::params::grafana_apikey,
   Array                                        $grafana_plugins                 = $::statistics::params::grafana_plugins,
-  Optional[String]                             $database_path_cert_file         = $::statistics::params::database_path_cert_file,
-  Optional[String]                             $database_path_cert_key          = $::statistics::params::database_path_cert_key,
+  Optional[String]                             $path_cert_file                  = $::statistics::params::path_cert_file,
+  Optional[String]                             $path_priv_cert                  = $::statistics::params::path_priv_cert,
   String                                       $influx_collectd_database_name   = $::statistics::params::influx_collectd_database_name,
   Integer                                      $influx_port                     = $::statistics::params::influx_port,
   String                                       $influx_storage                  = $::statistics::params::influx_storage,
@@ -20,8 +20,6 @@ class statistics (
   String                                       $influx_auth_username            = $::statistics::params::influx_auth_username,
   String                                       $influx_auth_password            = $::statistics::params::influx_auth_password,
   Boolean                                      $influx_https                    = $::statistics::params::influx_https,
-  Optional[String]                             $influx_path_to_priv_key         = $::statistics::params::influx_path_to_priv_key,
-  Optional[String]                             $influx_path_to_cert             = $::statistics::params::influx_path_to_cert,
   Hash                                         $influx_additional_configuration = $::statistics::params::influx_additional_configuration,
   String                                       $backup_influxdb_db_name         = $::statistics::params::backup_influxdb_db_name,
   String                                       $backup_influxdb_path            = $::statistics::params::backup_influxdb_path,
@@ -53,6 +51,14 @@ class statistics (
   $collectd_plugins        = lookup('statistics::collectd_plugins', Hash, 'hash', $::statistics::params::collectd_plugins)
   $telegraf_config_options = lookup('statistics::telegraf_config_options', Hash, 'hash', $::statistics::params::telegraf_config_options)
   $probes_scripts          = lookup('statistics::probes_scripts', Hash, 'hash', $::statistics::params::probes_scripts)
+
+  if $certs_generated_by_lets_encrypt == true {
+    $path_to_cert_file = $facts['find_out_path_to_certs']['cert']
+    $path_to_priv_cert = $facts['find_out_path_to_certs']['priv']
+  } else {
+    $path_to_cert_file = $path_cert_file
+    $path_to_priv_cert = $path_priv_cert
+  }
   
   if ($server == true) {
     include statistics::role::server

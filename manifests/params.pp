@@ -47,8 +47,8 @@ class statistics::params  {
   $grafana_url                     = "http://127.0.0.1"
   $grafana_apikey                  = "SECRET KEY"
   $grafana_plugins                 = []
-  $database_path_cert_file         = undef
-  $database_path_cert_key          = undef
+  $path_cert_file                  = undef
+  $path_cert_key                   = undef
   $influx_port                     = 25800
   $influx_storage                  = "/var/lib/influxdb/"
   $influx_collectd_database_name   = "collectd"

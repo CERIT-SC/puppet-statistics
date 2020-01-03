@@ -19,8 +19,8 @@ class statistics::database::influxdb
                               "bind_address"                       => $::statistics::influx_bind_address,
                               "auth_enabled"                       => $::statistics::influx_auth_enabled,
                               "https"                              => $::statistics::influx_https,
-                              "https_certificate"                  => $::statistics::influx_path_to_cert,
-                              "https_private_key"                  => $::statistics::influx_path_to_priv_key,
+                              "https_certificate"                  => $::statistics::path_to_cert_file,
+                              "https_private_key"                  => $::statistics::path_to_priv_cert,
                               "additional_configuration"           => $::statistics::influx_additional_configuration,
                            }
   

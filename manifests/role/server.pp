@@ -47,8 +47,8 @@ class statistics::role::server
     }
 
     exec { 'chown certs':
-       command => "/bin/chown -R grafana:accessToLetsEncryptCerts /etc/letsencrypt/archive}",
-       unless  => "/usr/bin/stat -c \"%G\" /etc/letsencrypt/archive/${facts['fqdn']} | grep accessToLetsEncryptCerts",
+       command => "/bin/chown -R grafana:accessToLetsEncryptCerts /etc/letsencrypt/archive",
+       unless  => "/usr/bin/stat -c \"%G\" ${::statistics::path_to_priv_cert} | grep accessToLetsEncryptCerts",
        require => [ Group['accessToLetsEncryptCerts'], Letsencrypt::Certonly[$facts['fqdn']] ],
     }
 

@@ -6,7 +6,7 @@ class statistics::grafana::install {
   file { 'grafana config':
     ensure  => 'present',
     path    => '/etc/grafana/grafana.ini',
-    content => epp('statistics/grafana_config.epp', { "protocol" => $::statistics::grafana_web_protocol, "path_to_cert_file" => $::statistics::database_path_cert_file, "path_to_cert_key" => $::statistics::database_path_cert_key }), 
+    content => epp('statistics/grafana_config.epp', { "protocol" => $::statistics::grafana_web_protocol, "path_to_cert_file" => $::statistics::path_to_cert_file, "path_to_cert_key" => $::statistics::path_to_priv_cert }), 
     require => Package[$::statistics::server_packages],
   }
 
