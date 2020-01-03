@@ -10,8 +10,8 @@ class statistics (
   String                                       $grafana_url                     = $::statistics::params::grafana_url,
   String                                       $grafana_apikey                  = $::statistics::params::grafana_apikey,
   Array                                        $grafana_plugins                 = $::statistics::params::grafana_plugins,
-  Optional[String]                             $path_cert_file                  = $::statistics::params::path_cert_file,
-  Optional[String]                             $path_priv_cert                  = $::statistics::params::path_priv_cert,
+  Optional[String]                             $path_to_cert_file               = $::statistics::params::path_to_cert_file,
+  Optional[String]                             $path_to_priv_cert               = $::statistics::params::path_to_priv_cert,
   String                                       $influx_collectd_database_name   = $::statistics::params::influx_collectd_database_name,
   Integer                                      $influx_port                     = $::statistics::params::influx_port,
   String                                       $influx_storage                  = $::statistics::params::influx_storage,
@@ -52,14 +52,6 @@ class statistics (
   $telegraf_config_options = lookup('statistics::telegraf_config_options', Hash, 'hash', $::statistics::params::telegraf_config_options)
   $probes_scripts          = lookup('statistics::probes_scripts', Hash, 'hash', $::statistics::params::probes_scripts)
 
-  if $certs_generated_by_lets_encrypt == true {
-    $path_to_cert_file = $facts['find_out_path_to_certs']['cert']
-    $path_to_priv_cert = $facts['find_out_path_to_certs']['priv']
-  } else {
-    $path_to_cert_file = $path_cert_file
-    $path_to_priv_cert = $path_priv_cert
-  }
-  
   if ($server == true) {
     include statistics::role::server
   } else {
