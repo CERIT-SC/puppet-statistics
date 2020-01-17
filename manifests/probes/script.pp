@@ -8,9 +8,7 @@ define statistics::probes::script (
 
   if $facts['fqdn'] =~ $node {
 
-      package { $name_of_package:
-         ensure => "present",
-      }
+      ensure_resource('package', $name_of_package, {'ensure' => 'present'})
 
       if $type_of_probe == "collectd" {
 
