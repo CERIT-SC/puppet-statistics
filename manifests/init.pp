@@ -41,7 +41,7 @@ class statistics (
   String                                       $collectd_password               = $::statistics::params::collectd_password,
 ) inherits statistics::params {
 
-  if ("telegraf" in $type_of_probes) and (size($databses) == 1) and ("prometheus2" in $databases) {
+  if ("telegraf" in $type_of_probes) and ($databases != Undef) and (size($databases) == 1) and ("prometheus2" in $databases) {
     fail("telegraf cannot work with prometheus. Remove telegraf from 'type_of_probes' or change databases") 
   }
   
