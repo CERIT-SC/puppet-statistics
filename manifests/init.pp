@@ -37,8 +37,8 @@ class statistics (
   Integer                                      $telegraf_metric_buffer_limit    = $::statistics::params::telegraf_metric_buffer_limit,
   Integer                                      $collectd_listen_port            = $::statistics::params::collectd_listen_port,
   Integer                                      $collectd_exp_port               = $::statistics::params::collectd_exp_port,
-  String                                       $collectd_username               = $::statistics::params::collectd_username,
-  String                                       $collectd_password               = $::statistics::params::collectd_password,
+  Optional[String]                             $collectd_username               = $::statistics::params::collectd_username,
+  Optional[String]                             $collectd_password               = $::statistics::params::collectd_password,
 ) inherits statistics::params {
 
   if ("telegraf" in $type_of_probes) and ($databases != Undef) and (size($databases) == 1) and ("prometheus2" in $databases) {

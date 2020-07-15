@@ -25,8 +25,8 @@ class statistics::params  {
   #COLLECTD
   $collectd_plugins     = {}
   $collectd_listen_port = 25826
-  $collectd_username    = lookup('statistics::collectd_username')
-  $collectd_password    = lookup('statistics::collectd_password')
+  $collectd_username    = lookup('statistics::collectd_username', undef, undef, undef)
+  $collectd_password    = lookup('statistics::collectd_password', undef, undef, undef)
 
   # TELEGRAF
   $telegraf_config_options      = {}
