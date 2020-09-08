@@ -75,6 +75,7 @@
   auth-enabled = <%= $auth_enabled %>
 <%     if $https == true { -%>
   https-enabled     = true
+  flux-enabled      = true
   https-certificate = "<%= $https_certificate %>"
   https-private-key = "<%= $https_private_key %>"
 <%     } -%>
