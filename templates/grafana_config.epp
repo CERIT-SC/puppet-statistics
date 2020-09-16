@@ -20,3 +20,6 @@ org_name = adm.cerit-sc.cz
 
 # specify role for unauthenticated users
 org_role = Viewer
+
+[security]
+allow_embedding = true
