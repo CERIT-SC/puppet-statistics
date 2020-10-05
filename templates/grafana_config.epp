@@ -23,3 +23,7 @@ org_role = Viewer
 
 [security]
 allow_embedding = true
+
+[rendering]
+server_url = http://147.251.124.99:8081/render
+callback_url = https://hsm8.cerit-sc.cz
