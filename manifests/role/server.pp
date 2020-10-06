@@ -22,7 +22,7 @@ class statistics::role::server
         
     letsencrypt::certonly { $facts['fqdn']: 
        manage_cron => true,
-       domains     => $::statistics::certdomains,
+       domains     => $::statistics::cert_domains,
        before      => File['grafana config'],
     }
 
