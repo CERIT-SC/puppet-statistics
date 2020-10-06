@@ -39,6 +39,7 @@ class statistics (
   Integer                                      $collectd_exp_port               = $::statistics::params::collectd_exp_port,
   Optional[String]                             $collectd_username               = $::statistics::params::collectd_username,
   Optional[String]                             $collectd_password               = $::statistics::params::collectd_password,
+  Array[String]                                $cert_domains                    = $::statistics::params::cert_domains,
 ) inherits statistics::params {
 
   if ("telegraf" in $type_of_probes) and ($databases != Undef) and (size($databases) == 1) and ("prometheus2" in $databases) {

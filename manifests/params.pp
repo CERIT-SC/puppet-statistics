@@ -22,6 +22,8 @@ class statistics::params  {
     }
   }
 
+  $cert_domains         = $facts['fqdn']
+
   #COLLECTD
   $collectd_plugins     = {}
   $collectd_listen_port = 25826
