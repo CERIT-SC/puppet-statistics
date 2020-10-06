@@ -22,7 +22,7 @@ class statistics::params  {
     }
   }
 
-  $cert_domains         = $facts['fqdn']
+  $cert_domains         = [$facts['fqdn']]
 
   #COLLECTD
   $collectd_plugins     = {}
