@@ -43,32 +43,6 @@
 <%     } -%>
 <% } -%>
 
-[[collectd]]
-<% if $additional_configuration =~ Undef or $additional_configuration["[collectd]"] =~ Undef { -%>
-  enabled = true
-  bind-address = ":<%= $influx_listening_port_for_collectd %>"
-  database = "<%= $database_name_for_collectd %>"
-  typesdb = "/usr/share/collectd/types.db"
-<% } else { -%>
-<%     if $additional_configuration["[collectd]"]["enabled"] =~ Undef { -%>
-  enabled = true
-<%     } -%>
-<%     if $additional_configuration["[collectd]"]["bind-address"] =~ Undef { -%>
-  bind-address = ":<%= $influx_listening_port_for_collectd %>"
-<%     } -%>
-<%     if $additional_configuration["[collectd]"]["database"] =~ Undef { -%>
-  database = "<%= $database_name_for_collectd %>"
-<%     } -%>
-<%     if $additional_configuration["[collectd]"]["typesdb"] =~ Undef { -%>
-  typesdb = "/usr/share/collectd/types.db"
-<%     } -%>
-<% } -%>
-<% unless $additional_configuration =~ Undef or $additional_configuration["[collectd]"] =~ Undef { -%>
-<%     $additional_configuration["[collectd]"].each |$entry, $value| { -%>
-  <%= $entry %> = <%= $value %>
-<%     } -%>
-<% } -%>
-
 [http]
 <% if $additional_configuration =~ Undef or $additional_configuration["http"] =~ Undef { -%>
   bind-address = "<%= $bind_address %>"
