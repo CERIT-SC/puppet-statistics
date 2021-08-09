@@ -2,7 +2,7 @@ class statistics::params  {
   
   # DEFAULT STUFF
   case $facts['operatingsystem'] {
-    'Debian': {
+    'Debian', 'Ubuntu': {
               $collectd_config_path     = "/etc/collectd/collectd.conf"
               $collectd_path_to_plugins = "/etc/collectd/collectd.conf.d"
               $telegraf_path_to_plugins = "/etc/telegraf/telegraf.d"
