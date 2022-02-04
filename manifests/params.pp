@@ -9,7 +9,7 @@ class statistics::params  {
               $telegraf_config_path     = "/etc/telegraf/telegraf.conf"
     }
 
-    'CentOS', 'RedHat': {
+    'CentOS', 'RedHat', 'Rocky': {
               $collectd_config_path     = "/etc/collectd.conf"
               $collectd_path_to_plugins = "/etc/collectd.d"
               $telegraf_path_to_plugins = "/etc/telegraf/telegraf.d"
