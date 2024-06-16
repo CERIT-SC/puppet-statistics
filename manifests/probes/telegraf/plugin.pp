@@ -4,7 +4,7 @@ define statistics::probes::telegraf::plugin (
   Boolean $empty    = true,
 ) {
     if $facts['operatingsystem'] == 'Ubuntu' {
-      $_owner = '_telegraf'
+      $_owner = 'telegraf'
     } else {
       $_owner = 'telegraf'
     }
